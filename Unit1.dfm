@@ -12,6 +12,7 @@ object fmSheego: TfmSheego
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
+  Position = poDefault
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 14
@@ -23,6 +24,128 @@ object fmSheego: TfmSheego
     ActivePage = TabSheet3
     Align = alClient
     TabOrder = 0
+    object TabSheet1: TTabSheet
+      Caption = 'Import New'
+      OnShow = TabSheet1Show
+      object Panel6: TPanel
+        Left = 0
+        Top = 0
+        Width = 713
+        Height = 571
+        Align = alClient
+        Caption = 'Click on "Open..." to start a new order'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -19
+        Font.Name = 'Verdana'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        ExplicitLeft = 320
+        ExplicitTop = 288
+        ExplicitWidth = 185
+        ExplicitHeight = 41
+        object Panel3: TPanel
+          Left = 1
+          Top = 471
+          Width = 711
+          Height = 99
+          Align = alBottom
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -15
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          ExplicitLeft = 0
+          ExplicitTop = 472
+          ExplicitWidth = 713
+          object lblCustomer: TLabel
+            Left = 0
+            Top = 56
+            Width = 5
+            Height = 18
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -15
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
+          object Label1: TLabel
+            Left = 224
+            Top = 6
+            Width = 155
+            Height = 18
+            Caption = 'Receipt date Requested'
+          end
+          object BitBtn3: TBitBtn
+            Left = 121
+            Top = 6
+            Width = 89
+            Height = 36
+            Action = actCommit
+            Caption = 'Commit'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clNavy
+            Font.Height = -15
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+          end
+          object DateTimePicker1: TDateTimePicker
+            Left = 385
+            Top = 6
+            Width = 128
+            Height = 26
+            Date = 42801.630592002320000000
+            Time = 42801.630592002320000000
+            TabOrder = 1
+          end
+          object BitBtn4: TBitBtn
+            Left = 0
+            Top = 6
+            Width = 97
+            Height = 36
+            Action = FileOpen1
+            Caption = '&Open...'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clNavy
+            Font.Height = -15
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 2
+          end
+        end
+        object StringGrid1: TStringGrid
+          Left = 1
+          Top = 1
+          Width = 711
+          Height = 470
+          Align = alClient
+          DrawingStyle = gdsGradient
+          FixedColor = clSkyBlue
+          FixedCols = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Verdana'
+          Font.Style = []
+          GradientEndColor = clSkyBlue
+          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goThumbTracking]
+          ParentFont = False
+          TabOrder = 1
+          Visible = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 713
+          ExplicitHeight = 571
+        end
+      end
+    end
     object TabSheet3: TTabSheet
       Caption = 'Orders'
       ImageIndex = 2
@@ -222,43 +345,43 @@ object fmSheego: TfmSheego
               item
                 Expanded = False
                 FieldName = 'MG'
-                Width = 80
+                Width = 40
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'BG'
-                Width = 80
+                Width = 40
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'PUBL'
-                Width = 80
+                Width = 60
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'WG'
-                Width = 80
+                Width = 40
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'ITEMNO'
-                Width = 80
+                Width = 100
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'OPT_DESC'
-                Width = 80
+                Width = 120
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'ITEM_NO'
-                Width = 80
+                Width = 100
                 Visible = True
               end
               item
@@ -276,132 +399,52 @@ object fmSheego: TfmSheego
               item
                 Expanded = False
                 FieldName = 'PO_BAL_WO_'
-                Width = 80
+                Width = 55
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'PO_BAL_WO_2'
-                Visible = False
+                Width = 55
+                Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'PO_BAL_WO_3'
-                Visible = False
+                Width = 55
+                Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'PO_BAL_WO_4'
-                Visible = False
+                Width = 55
+                Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'ORG_PO_U_I'
-                Visible = False
+                Width = 40
+                Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'ITEM_E_TOT'
-                Width = 80
+                Width = 40
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'ITEM_E_SUP'
-                Width = 200
+                Width = 120
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'WholeSaleNali'
                 Visible = True
               end>
           end
         end
-      end
-    end
-    object TabSheet1: TTabSheet
-      Caption = 'Import New'
-      OnShow = TabSheet1Show
-      object Panel3: TPanel
-        Left = 0
-        Top = 472
-        Width = 713
-        Height = 99
-        Align = alBottom
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -15
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-        object lblCustomer: TLabel
-          Left = 0
-          Top = 56
-          Width = 5
-          Height = 18
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -15
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-        end
-        object Label1: TLabel
-          Left = 224
-          Top = 6
-          Width = 155
-          Height = 18
-          Caption = 'Receipt date Requested'
-        end
-        object BitBtn3: TBitBtn
-          Left = 121
-          Top = 6
-          Width = 89
-          Height = 36
-          Action = actCommit
-          Caption = 'Commit'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clNavy
-          Font.Height = -15
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 0
-        end
-        object DateTimePicker1: TDateTimePicker
-          Left = 385
-          Top = 6
-          Width = 128
-          Height = 26
-          Date = 42801.630592002320000000
-          Time = 42801.630592002320000000
-          TabOrder = 1
-        end
-        object BitBtn4: TBitBtn
-          Left = 0
-          Top = 6
-          Width = 97
-          Height = 36
-          Action = FileOpen1
-          Caption = '&Open...'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clNavy
-          Font.Height = -15
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 2
-        end
-      end
-      object StringGrid1: TStringGrid
-        Left = 0
-        Top = 0
-        Width = 713
-        Height = 472
-        Align = alClient
-        DrawingStyle = gdsGradient
-        FixedColor = clSkyBlue
-        FixedCols = 0
-        GradientEndColor = clSkyBlue
-        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goThumbTracking]
-        TabOrder = 1
       end
     end
     object TabSheet2: TTabSheet
@@ -640,7 +683,7 @@ object fmSheego: TfmSheego
     Left = 296
     Top = 104
     Bitmap = {
-      494C01010C001800340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C001800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

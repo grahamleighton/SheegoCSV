@@ -82,24 +82,28 @@ object DM: TDM
         Attributes = [paNullable]
         DataType = ftInteger
         Precision = 10
+        Value = Null
       end
       item
         Name = '@FirstName'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@LastName'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@AccountNo'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end>
     Left = 460
     Top = 40
@@ -114,24 +118,28 @@ object DM: TDM
         DataType = ftInteger
         Direction = pdReturnValue
         Precision = 10
+        Value = Null
       end
       item
         Name = '@FirstName'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@LastName'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@AccountNo'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@CustomerID'
@@ -139,6 +147,7 @@ object DM: TDM
         DataType = ftInteger
         Direction = pdInputOutput
         Precision = 10
+        Value = Null
       end>
     ParamCheck = False
     Left = 256
@@ -154,18 +163,21 @@ object DM: TDM
         DataType = ftInteger
         Direction = pdReturnValue
         Precision = 10
+        Value = Null
       end
       item
         Name = '@CustomerID'
         Attributes = [paNullable]
         DataType = ftInteger
         Precision = 10
+        Value = Null
       end
       item
         Name = '@ReceiptDate'
         Attributes = [paNullable]
         DataType = ftWideString
         Size = 10
+        Value = Null
       end
       item
         Name = '@CreateID'
@@ -173,6 +185,7 @@ object DM: TDM
         DataType = ftInteger
         Direction = pdInputOutput
         Precision = 10
+        Value = Null
       end>
     ParamCheck = False
     Left = 352
@@ -195,108 +208,126 @@ object DM: TDM
         Attributes = [paNullable]
         DataType = ftInteger
         Precision = 10
+        Value = Null
       end
       item
         Name = '@MG'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@BG'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@PUBL'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@WG'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@ITEMNO'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@OPT_DESC'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@ITEM_NO'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@PO_NO'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@OPT_DESC2'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@PO_BAL_WO_'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@PO_BAL_WO_2'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@PO_BAL_WO_3'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@PO_BAL_WO_4'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@ORG_PO_U_I'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@ITEM_E_TOT'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@ITEM_E_SUP'
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
       end
       item
         Name = '@WHOLESALE_NALI'
         Attributes = [paNullable]
         DataType = ftInteger
         Precision = 10
+        Value = Null
       end>
     ParamCheck = False
     Left = 456
@@ -366,6 +397,7 @@ object DM: TDM
         Attributes = [paNullable]
         DataType = ftInteger
         Precision = 10
+        Value = Null
       end>
     Left = 72
     Top = 240
@@ -440,6 +472,10 @@ object DM: TDM
       FieldName = 'ITEM_E_SUP'
       Size = 50
     end
+    object spGetOrderDetailWholeSaleNali: TBooleanField
+      FieldName = 'WholeSaleNali'
+      DisplayValues = '1;0'
+    end
   end
   object dsspGetOrderHeaders: TDataSource
     DataSet = spGetOrderHeaders
@@ -461,12 +497,14 @@ object DM: TDM
         DataType = ftInteger
         Direction = pdReturnValue
         Precision = 10
+        Value = Null
       end
       item
         Name = '@OrderID'
         Attributes = [paNullable]
         DataType = ftInteger
         Precision = 10
+        Value = Null
       end>
     Left = 344
     Top = 176
@@ -517,8 +555,9 @@ object DM: TDM
       FieldName = 'Menge'
       Size = 50
     end
-    object spGetOrderOutputWholeSaleNali: TBooleanField
+    object spGetOrderOutputWholeSaleNali: TIntegerField
       FieldName = 'WholeSaleNali'
+      ReadOnly = True
     end
   end
   object spUpdateOrderAsSent: TADOCommand
@@ -531,15 +570,23 @@ object DM: TDM
         DataType = ftInteger
         Direction = pdReturnValue
         Precision = 10
+        Value = Null
       end
       item
         Name = '@OrderID'
         Attributes = [paNullable]
         DataType = ftInteger
         Precision = 10
+        Value = Null
       end>
     ParamCheck = False
     Left = 344
+    Top = 240
+  end
+  object ADOTable1: TADOTable
+    Connection = DB
+    TableName = 'viewOrderOutstanding'
+    Left = 440
     Top = 240
   end
 end

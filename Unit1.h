@@ -71,6 +71,7 @@ __published:	// IDE-managed Components
 	TMenuItem *Theme1;
 	TBitBtn *BitBtn4;
 	TAction *actCommit;
+	TPanel *Panel6;
 	void __fastcall FileOpen1Accept(TObject *Sender);
 	void __fastcall TabSheet1Show(TObject *Sender);
 	void __fastcall btnNewCustomerClick(TObject *Sender);

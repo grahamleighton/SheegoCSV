@@ -193,7 +193,19 @@ TfmSheego::LoadCSVFile(UnicodeString CSVFile)
 
 	while ( hc < StringGrid1->ColCount )
 		{
-			StringGrid1->ColWidths[hc] = StringGrid1->Cells[hc][0].Length() * 10;
+			int mx = 0 ;
+
+			mx = 0;
+			int r = 0;
+			while (r < StringGrid1->RowCount )
+			{
+				if ( StringGrid1->Cells[hc][r].Length() > mx ) {
+					mx = StringGrid1->Cells[hc][r].Length() ;
+				}
+				r++;
+			}
+
+			StringGrid1->ColWidths[hc] = (mx+1) * 10;
 			hc++;
 		}
 
@@ -225,7 +237,7 @@ void __fastcall TfmSheego::FileOpen1Accept(TObject *Sender)
 		LoadCSVFile(FileOpen1->Dialog->FileName) ;
 	}
 
-
+    StringGrid1->Visible = true;
 
 
 
@@ -640,4 +652,8 @@ void __fastcall TfmSheego::actCommitExecute(TObject *Sender)
 
 }
 //---------------------------------------------------------------------------
+
+
+
+
 

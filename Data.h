@@ -67,7 +67,9 @@ __published:	// IDE-managed Components
 	TStringField *spGetOrderOutputlastName;
 	TStringField *spGetOrderOutputsku;
 	TStringField *spGetOrderOutputMenge;
-	TBooleanField *spGetOrderOutputWholeSaleNali;
+	TIntegerField *spGetOrderOutputWholeSaleNali;
+	TADOTable *ADOTable1;
+	TBooleanField *spGetOrderDetailWholeSaleNali;
 	void __fastcall spGetCustomersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersBeforeClose(TDataSet *DataSet);
