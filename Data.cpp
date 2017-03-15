@@ -3,7 +3,14 @@
 
 #pragma hdrstop
 
+
+
 #include "Data.h"
+#include "Config.h"
+
+
+extern GConfig *Config;
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma classgroup "System.Classes.TPersistent"
@@ -13,6 +20,17 @@ TDM *DM;
 __fastcall TDM::TDM(TComponent* Owner)
 	: TDataModule(Owner)
 {
+	tblConfig->Open();
+
+	if ( !tblConfig->Eof ) {
+		Config->setUserAndServer(tblConfigusername->AsString.Trim() , tblConfigservername->AsString.Trim() , tblConfigserverpathin->AsString.Trim() , tblConfigserverpathout->AsString.Trim()  );
+	}
+	tblConfig->Close();
+
+
+
+
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TDM::spGetCustomersAfterScroll(TDataSet *DataSet)
@@ -58,11 +76,31 @@ void __fastcall TDM::spGetOrderHeadersBeforeClose(TDataSet *DataSet)
 	spGetOrderDetail->Active = false;
 }
 
+void
+TDM::setFTPDetails()
+{
+	qryFTPPassword->Parameters->ParamByName("user")->Value = Config->getUser() ;
+	qryFTPPassword->Parameters->ParamByName("server")->Value = Config->getServer()  ;
+
+	qryFTPPassword->Open();
+	if ( ! qryFTPPassword->Eof ) {
+		Config->setPassword(qryFTPPasswordpwd->Value );
+	}
+	qryFTPPassword->Close();
+
+
+
+
+}
+
 
 void
 TDM::CreateCSV()
 {
 	// creates csv
+
+
+
 
 	try
 	{
@@ -80,10 +118,10 @@ TDM::CreateCSV()
 		return;
 	}
 
-	if ( ! fmSheego->SaveDialog1->Execute() ) {
-		spGetOrderOutput->Close();
-		return;
-	}
+//	if ( ! fmSheego->SaveDialog1->Execute() ) {
+//		spGetOrderOutput->Close();
+//		return;
+//	}
 
 
 	TStringList *csv = new TStringList();
@@ -100,24 +138,46 @@ TDM::CreateCSV()
 
 	spGetOrderOutput->GetFieldNames(flds);
 
+	int IDix = flds->IndexOf("ID");
+
+	if ( IDix > -1 ) {
+		flds->Delete(IDix);
+	}
+
 
 	flds->Delimiter = ';';
 	rec->Delimiter = ';';
 	csv->Add ( flds->DelimitedText );
 	int col = 0;
-	while ( ! spGetOrderOutput->Eof )
-		{
-			rec->Clear();
-			orderids->Add(IntToStr(spGetOrderOutputSalesIdExternal->AsInteger) ) ;
 
-			col = 0;
-			while ( col < flds->Count  )
+	TStringList *f2 = new TStringList();
+
+	f2->Clear();
+	f2->Add("sku");
+	f2->Add("Menge");
+	f2->Add("WholeSaleNali");
+
+
+	if( ! spGetOrderOutput->Eof )
+	{
+		rec->Clear();
+		orderids->Add(IntToStr(spGetOrderOutputID->AsInteger) ) ;
+
+
+		col = 0;
+		while ( col < flds->Count  )
+		{
+			if ( f2->IndexOf(flds->Strings[col]) != -1 ) {
+				rec->Add ( "" );
+			}
+			else
 			{
-				if ( flds->Strings[col] == "ReceiptDateRequested") {
-					rec->Add ( spGetOrderOutput->FieldByName(flds->Strings[col])->AsDateTime.FormatString("dd.mm.yyyy") );
-				}
-				else
-				{
+			if ( flds->Strings[col] == "ReceiptDateRequested") {
+				rec->Add ( spGetOrderOutput->FieldByName(flds->Strings[col])->AsDateTime.FormatString("dd.mm.yyyy") );
+			}
+			else
+			{
+				if ( flds->Strings[col] != "ID") {
 					switch (spGetOrderOutput->FieldByName(flds->Strings[col])->DataType) {
 						case ftInteger : {
 							rec->Add ( IntToStr(spGetOrderOutput->FieldByName(flds->Strings[col])->AsInteger) ) ;
@@ -137,12 +197,70 @@ TDM::CreateCSV()
 							else
 							{
 								rec->Add ("0");
-							}
+								}
 							break;
-                        }
+						}
 					default:
 						rec->Add ( spGetOrderOutput->FieldByName(flds->Strings[col])->Value ) ;
 					}
+
+				}
+			}
+			}
+
+			col++;
+		}
+		csv->Add(rec->DelimitedText );
+	}
+
+	while ( ! spGetOrderOutput->Eof )
+		{
+			rec->Clear();
+			orderids->Add(IntToStr(spGetOrderOutputID->AsInteger) ) ;
+
+			col = 0;
+
+			while ( col < flds->Count  )
+			{
+				if ( f2->IndexOf(flds->Strings[col]) == -1 ) {
+					rec->Add ( "" );
+				}
+				else
+				{
+				if ( flds->Strings[col] == "ReceiptDateRequested") {
+					rec->Add ( spGetOrderOutput->FieldByName(flds->Strings[col])->AsDateTime.FormatString("dd.mm.yyyy") );
+				}
+				else
+				{
+					if ( flds->Strings[col] != "ID") {
+						switch (spGetOrderOutput->FieldByName(flds->Strings[col])->DataType) {
+							case ftInteger : {
+								rec->Add ( IntToStr(spGetOrderOutput->FieldByName(flds->Strings[col])->AsInteger) ) ;
+								break;
+							}
+							case ftDate :
+							case ftDateTime :
+							{
+								rec->Add ( spGetOrderOutput->FieldByName(flds->Strings[col])->AsDateTime.FormatString("dd.mm.yyyy") );
+								break;
+							}
+							case ftBoolean :
+							{
+								if (spGetOrderOutput->FieldByName(flds->Strings[col])->AsBoolean == true) {
+									rec->Add ( "1");
+								}
+								else
+								{
+									rec->Add ("0");
+									}
+								break;
+							}
+						default:
+							rec->Add ( spGetOrderOutput->FieldByName(flds->Strings[col])->Value ) ;
+						}
+
+					}
+				}
 				}
 
 				col++;
@@ -153,11 +271,15 @@ TDM::CreateCSV()
 		}
 
 	spGetOrderOutput->Close();
+	delete f2;
 
+
+	UnicodeString fileName = "order_fgh_sheego_" + Now().FormatString("yyyymmdd") + "_" + Now().FormatString("hhnnss") + ".csv";
 
 	try
 	{
-		csv->SaveToFile(fmSheego->SaveDialog1->FileName);
+		ForceDirectories("h:\\shgo\\temp");
+		csv->SaveToFile("h:\\shgo\\temp\\" + fileName);
 	}
 	catch(Exception &E)
 	{
@@ -172,40 +294,56 @@ TDM::CreateCSV()
 	delete rec;
 	delete flds;
 
+	// now send the file to the ftp folder
+
+
+	Config->setCurrentFile("h:\\shgo\\temp\\" + fileName);
+	Config->SentOK = false;
+
+
+	fmSheego->actSendFile->Execute() ;
+
+
+
+
+	if (Config->SentOK ) {
 	// now update the orderids
 
-	int oi = 0;
+		int oi = 0;
 
-	try
-	{
-		DB->BeginTrans() ;
-
-		while ( oi < orderids->Count)
-			{
-				spUpdateOrderAsSent->Parameters->ParamByName("@OrderID")->Value =
-					orderids->Strings[oi];
-				spUpdateOrderAsSent->Execute();
-
-				oi++;
-			}
-
-		DB->CommitTrans() ;
-		MessageDlg ( "Success! Saved to " + fmSheego->SaveDialog1->FileName , mtInformation , TMsgDlgButtons() << mbOK , 0 );
-	}
-	catch(Exception &E)
-	{
 		try
 		{
-			DB->RollbackTrans() ;
-		}
-		catch(...)
-		{
+			DB->BeginTrans() ;
 
+			while ( oi < orderids->Count)
+				{
+					spUpdateOrderAsSent->Parameters->ParamByName("@OrderID")->Value =
+						orderids->Strings[oi];
+					spUpdateOrderAsSent->Execute();
+
+					oi++;
+				}
+
+			DB->CommitTrans() ;
+			MessageDlg ( "Success! Saved to " + fileName , mtInformation , TMsgDlgButtons() << mbOK , 0 );
 		}
-		MessageDlg ( "Error while creating CSV , backing out all changes\n\n" + E.Message ,
-			mtError ,
-			TMsgDlgButtons() << mbOK , 0 );
+		catch(Exception &E)
+		{
+			try
+			{
+				DB->RollbackTrans() ;
+			}
+			catch(...)
+			{
+
+			}
+			MessageDlg ( "Error while creating CSV , backing out all changes\n\n" + E.Message ,
+				mtError ,
+				TMsgDlgButtons() << mbOK , 0 );
+		}
 	}
+
+
 
 	delete orderids;
 

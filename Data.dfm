@@ -1,7 +1,7 @@
 object DM: TDM
   OldCreateOrder = False
-  Height = 306
-  Width = 590
+  Height = 314
+  Width = 682
   object DB: TADOConnection
     Connected = True
     ConnectionString = 
@@ -521,8 +521,9 @@ object DM: TDM
       ReadOnly = True
       Size = 8
     end
-    object spGetOrderOutputSalesIdExternal: TLargeintField
+    object spGetOrderOutputSalesIdExternal: TStringField
       FieldName = 'SalesIdExternal'
+      Size = 50
     end
     object spGetOrderOutputCurrencyCode: TStringField
       FieldName = 'CurrencyCode'
@@ -559,6 +560,9 @@ object DM: TDM
       FieldName = 'WholeSaleNali'
       ReadOnly = True
     end
+    object spGetOrderOutputID: TLargeintField
+      FieldName = 'ID'
+    end
   end
   object spUpdateOrderAsSent: TADOCommand
     CommandText = 'updateOrderAsSent;1'
@@ -570,7 +574,7 @@ object DM: TDM
         DataType = ftInteger
         Direction = pdReturnValue
         Precision = 10
-        Value = Null
+        Value = 0
       end
       item
         Name = '@OrderID'
@@ -588,5 +592,71 @@ object DM: TDM
     TableName = 'viewOrderOutstanding'
     Left = 440
     Top = 240
+  end
+  object DBAMAINT: TADOConnection
+    Connected = True
+    ConnectionString = 
+      'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
+      'fo=False;Initial Catalog=dbamaint;Data Source=fgh-sql02;Use Proc' +
+      'edure for Prepare=1;Auto Translate=True;Packet Size=4096;Worksta' +
+      'tion ID=VDIW81PERS-7;Use Encryption for Data=False;Tag with colu' +
+      'mn collation when possible=False'
+    LoginPrompt = False
+    Provider = 'SQLOLEDB.1'
+    Left = 568
+    Top = 40
+  end
+  object qryFTPPassword: TADOQuery
+    Connection = DBAMAINT
+    CursorType = ctStatic
+    Parameters = <
+      item
+        Name = 'server'
+        DataType = ftWideString
+        Size = 10
+        Value = 'ottoukfp'
+      end
+      item
+        Name = 'user'
+        DataType = ftWideString
+        Size = 14
+        Value = 'ottouk\ftnwcon'
+      end>
+    SQL.Strings = (
+      'select  dbo.fx_decrypt_pw(:server,:user) pwd')
+    Left = 568
+    Top = 104
+    object qryFTPPasswordpwd: TStringField
+      FieldName = 'pwd'
+      ReadOnly = True
+      Size = 50
+    end
+  end
+  object tblConfig: TADOTable
+    Connection = DB
+    CursorType = ctStatic
+    TableName = 'Config'
+    Left = 568
+    Top = 176
+    object tblConfigConfigID: TLargeintField
+      FieldName = 'ConfigID'
+      ReadOnly = True
+    end
+    object tblConfigservername: TStringField
+      FieldName = 'servername'
+      Size = 50
+    end
+    object tblConfigusername: TStringField
+      FieldName = 'username'
+      Size = 50
+    end
+    object tblConfigserverpathout: TStringField
+      FieldName = 'serverpathout'
+      Size = 150
+    end
+    object tblConfigserverpathin: TStringField
+      FieldName = 'serverpathin'
+      Size = 150
+    end
   end
 end

@@ -41,10 +41,6 @@ object fmSheego: TfmSheego
         Font.Style = []
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = 320
-        ExplicitTop = 288
-        ExplicitWidth = 185
-        ExplicitHeight = 41
         object Panel3: TPanel
           Left = 1
           Top = 471
@@ -58,9 +54,6 @@ object fmSheego: TfmSheego
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 0
-          ExplicitTop = 472
-          ExplicitWidth = 713
           object lblCustomer: TLabel
             Left = 0
             Top = 56
@@ -139,10 +132,6 @@ object fmSheego: TfmSheego
           ParentFont = False
           TabOrder = 1
           Visible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 713
-          ExplicitHeight = 571
         end
       end
     end
@@ -609,6 +598,118 @@ object fmSheego: TfmSheego
         end
       end
     end
+    object TabSheet4: TTabSheet
+      Caption = 'Order Files'
+      ImageIndex = 3
+      object Panel7: TPanel
+        Left = 0
+        Top = 0
+        Width = 713
+        Height = 41
+        Align = alTop
+        Caption = 'Order Files (In)'
+        TabOrder = 0
+        ExplicitLeft = 136
+        ExplicitTop = 104
+        ExplicitWidth = 185
+        object BitBtn5: TBitBtn
+          Left = 16
+          Top = 10
+          Width = 153
+          Height = 25
+          Action = actRefreshOrderFiles
+          Caption = 'Refresh'
+          TabOrder = 0
+        end
+      end
+      object Panel8: TPanel
+        Left = 0
+        Top = 530
+        Width = 713
+        Height = 41
+        Align = alBottom
+        Caption = 'Order Files (Out)'
+        TabOrder = 1
+        ExplicitLeft = 232
+        ExplicitTop = 408
+        ExplicitWidth = 185
+      end
+      object Panel9: TPanel
+        Left = 0
+        Top = 41
+        Width = 713
+        Height = 489
+        Align = alClient
+        Caption = 'Panel9'
+        TabOrder = 2
+        ExplicitLeft = 168
+        ExplicitTop = 184
+        ExplicitWidth = 185
+        ExplicitHeight = 41
+        object Splitter2: TSplitter
+          Left = 1
+          Top = 217
+          Width = 711
+          Height = 3
+          Cursor = crVSplit
+          Align = alTop
+          ExplicitTop = 1
+          ExplicitWidth = 254
+        end
+        object lvOut: TListView
+          Left = 1
+          Top = 220
+          Width = 711
+          Height = 268
+          Align = alClient
+          Columns = <
+            item
+              Caption = 'FileName'
+              Width = 300
+            end
+            item
+              Caption = 'Size'
+              Width = 80
+            end
+            item
+              Caption = 'Modified'
+              Width = 180
+            end>
+          ReadOnly = True
+          RowSelect = True
+          TabOrder = 0
+          ViewStyle = vsReport
+          ExplicitTop = 1
+          ExplicitHeight = 216
+        end
+        object lvIn: TListView
+          Left = 1
+          Top = 1
+          Width = 711
+          Height = 216
+          Align = alTop
+          Columns = <
+            item
+              Caption = 'FileName'
+              Width = 300
+            end
+            item
+              Caption = 'Size'
+              Width = 80
+            end
+            item
+              Caption = 'Modified'
+              Width = 180
+            end>
+          ReadOnly = True
+          RowSelect = True
+          TabOrder = 1
+          ViewStyle = vsReport
+          ExplicitLeft = 2
+          ExplicitTop = 9
+        end
+      end
+    end
   end
   object MainMenu1: TMainMenu
     Images = ImageList1
@@ -623,6 +724,9 @@ object fmSheego: TfmSheego
       object Open2: TMenuItem
         Action = FileExit1
       end
+      object GetPwd1: TMenuItem
+        Action = actGetPwd
+      end
     end
     object Orders1: TMenuItem
       Caption = 'Orders'
@@ -634,6 +738,9 @@ object fmSheego: TfmSheego
       object CreateCSV1: TMenuItem
         Action = actCreateCSV
         ImageIndex = 8
+      end
+      object SendFile1: TMenuItem
+        Action = actSendFile
       end
     end
     object Theme1: TMenuItem
@@ -678,12 +785,28 @@ object fmSheego: TfmSheego
       ImageIndex = 1
       OnExecute = actCommitExecute
     end
+    object actSendFile: TAction
+      Category = 'File'
+      Caption = 'Send File'
+      OnExecute = actSendFileExecute
+    end
+    object actGetPwd: TAction
+      Category = 'File'
+      Caption = 'GetPwd'
+      OnExecute = actGetPwdExecute
+    end
+    object actRefreshOrderFiles: TAction
+      Category = 'File'
+      Caption = 'Refresh'
+      ImageIndex = 10
+      OnExecute = actRefreshOrderFilesExecute
+    end
   end
   object ImageList1: TImageList
     Left = 296
     Top = 104
     Bitmap = {
-      494C01010C001800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C0018003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1223,5 +1346,28 @@ object fmSheego: TfmSheego
     Filter = 'CSV Files|*.csv|All Files|*.*'
     Left = 544
     Top = 88
+  end
+  object IdFTP1: TIdFTP
+    IPVersion = Id_IPv4
+    NATKeepAlive.UseKeepAlive = False
+    NATKeepAlive.IdleTimeMS = 0
+    NATKeepAlive.IntervalMS = 0
+    ProxySettings.ProxyType = fpcmNone
+    ProxySettings.Port = 0
+    OnAfterClientLogin = IdFTP1AfterClientLogin
+    Left = 56
+    Top = 344
+  end
+  object IdFTP2: TIdFTP
+    IPVersion = Id_IPv4
+    NATKeepAlive.UseKeepAlive = False
+    NATKeepAlive.IdleTimeMS = 0
+    NATKeepAlive.IntervalMS = 0
+    ProxySettings.ProxyType = fpcmNone
+    ProxySettings.Port = 0
+    OnAfterClientLogin = IdFTP2AfterClientLogin
+    OnAfterPut = IdFTP2AfterPut
+    Left = 144
+    Top = 344
   end
 end

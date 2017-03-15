@@ -3,11 +3,21 @@
 #include <vcl.h>
 #include <dateutils.hpp>
 
+#include <IdAllFTPListParsers.hpp>
+
+#include <IdException.hpp>
 
 #pragma hdrstop
 
 #include "Unit1.h"
 #include "DBFParser.h"
+
+#include "config.h"
+
+GConfig *Config;
+UnicodeString fileToSend;
+
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -16,6 +26,7 @@ TfmSheego *fmSheego;
 __fastcall TfmSheego::TfmSheego(TComponent* Owner)
 	: TForm(Owner)
 {
+	Config = new GConfig();
 }
 //---------------------------------------------------------------------------
 
@@ -616,6 +627,11 @@ void __fastcall TfmSheego::actCommitExecute(TObject *Sender)
 			{
 				UnicodeString vdata = StringGrid1->Cells[j][row];
 				UnicodeString vhead = StringGrid1->Cells[j][0];
+				if (vhead == "OPT_DESC_0") {
+					vhead = "OPT_DESC2";
+				}
+
+
 
 				if ( DM->spAddOrderLine->Parameters->FindParam("@"+vhead) ) {
 					DM->spAddOrderLine->Parameters->ParamByName("@"+vhead)->Value  = vdata;
@@ -655,5 +671,173 @@ void __fastcall TfmSheego::actCommitExecute(TObject *Sender)
 
 
 
+
+
+void __fastcall TfmSheego::actSendFileExecute(TObject *Sender)
+{
+	DM->setFTPDetails() ;
+
+	IdFTP2->Host = Config->getServer() ;
+	IdFTP2->Username = Config->getUser() ;
+	IdFTP2->Password = Config->getPassword() ;
+
+	try
+	{
+		if ( ! IdFTP2->Connected() ) {
+			IdFTP2->Connect();
+		}
+
+	}
+	catch(Exception &E)
+	{
+		if (E.Message.UpperCase().Pos("ALREADY CONNECTED") > 0 ) {
+			IdFTP2AfterClientLogin(Sender);
+		}
+		else
+			MessageDlg ( E.Message , mtError , TMsgDlgButtons() << mbOK , 0 );
+	}
+
+
+
+
+
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfmSheego::IdFTP1AfterClientLogin(TObject *Sender)
+{
+
+	IdFTP1->ChangeDir("/");
+	IdFTP1->ChangeDir(Config->getServerFolderIn() );
+
+	IdFTP1->List();
+
+	int i = 0 ;
+
+	lvIn->Items->Clear();
+
+	while ( i < IdFTP1->DirectoryListing->Count   )
+		{
+			TListItem *LI = lvIn->Items->Add();
+
+			LI->Caption = IdFTP1->DirectoryListing->Items[i]->FileName;
+			LI->SubItems->Add ( IntToStr(IdFTP1->DirectoryListing->Items[i]->Size) ) ;
+			LI->SubItems->Add ( IdFTP1->DirectoryListing->Items[i]->ModifiedDate.FormatString("dd/mm/yyyy hh:nn")  );
+			i++;
+		}
+
+	IdFTP1->ChangeDir("/");
+	IdFTP1->ChangeDir(Config->getServerFolderOut() );
+
+
+
+	IdFTP1->List();
+
+	i = 0 ;
+	lvOut->Items->Clear();
+
+	while ( i < IdFTP1->DirectoryListing->Count   )
+		{
+			TListItem *LI = lvOut->Items->Add();
+
+			LI->Caption = IdFTP1->DirectoryListing->Items[i]->FileName;
+			LI->SubItems->Add ( IntToStr(IdFTP1->DirectoryListing->Items[i]->Size) ) ;
+			LI->SubItems->Add ( IdFTP1->DirectoryListing->Items[i]->ModifiedDate.FormatString("dd/mm/yyyy hh:nn")  );
+			i++;
+		}
+
+
+
+//	IdFTP1->Disconnect();
+
+
+
+
+
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::actGetPwdExecute(TObject *Sender)
+{
+	DM->setFTPDetails() ;
+
+	IdFTP1->Host = Config->getServer() ;
+	IdFTP1->Username = Config->getUser() ;
+	IdFTP1->Password = Config->getPassword() ;
+
+
+	Config->displaySettings() ;
+
+
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfmSheego::actRefreshOrderFilesExecute(TObject *Sender)
+{
+	DM->setFTPDetails() ;
+
+	IdFTP1->Host = Config->getServer() ;
+	IdFTP1->Username = Config->getUser() ;
+	IdFTP1->Password = Config->getPassword() ;
+
+ //	Config->displaySettings() ;
+
+	try
+	{
+		if ( ! IdFTP1->Connected() ) {
+			IdFTP1->Connect();
+		}
+
+	}
+	catch(Exception &E)
+	{
+		if (E.Message.UpperCase().Pos("ALREADY CONNECTED") > 0 ) {
+			IdFTP1AfterClientLogin(Sender);
+		}
+		else
+			MessageDlg ( E.Message , mtError , TMsgDlgButtons() << mbOK , 0 );
+	}
+
+
+
+
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfmSheego::IdFTP2AfterClientLogin(TObject *Sender)
+{
+	IdFTP2->ChangeDir(Config->getServerFolderOut() );
+
+	IdFTP2->Put(Config->getCurrentFile() );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::IdFTP2AfterPut(TObject *Sender)
+{
+	Config->SentOK = true;
+
+
+
+}
+//---------------------------------------------------------------------------
 
 

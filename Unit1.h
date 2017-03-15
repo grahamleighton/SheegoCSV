@@ -19,6 +19,15 @@
 #include <Vcl.Buttons.hpp>
 #include <Vcl.ImgList.hpp>
 #include <Vcl.Dialogs.hpp>
+#include <IdBaseComponent.hpp>
+#include <IdComponent.hpp>
+#include <IdExplicitTLSClientServerBase.hpp>
+#include <IdFTP.hpp>
+#include <IdGlobal.hpp>
+#include <IdTCPClient.hpp>
+#include <IdTCPConnection.hpp>
+#include <Data.DB.hpp>
+#include "config.h"
 //---------------------------------------------------------------------------
 class TfmSheego : public TForm
 {
@@ -72,6 +81,21 @@ __published:	// IDE-managed Components
 	TBitBtn *BitBtn4;
 	TAction *actCommit;
 	TPanel *Panel6;
+	TAction *actSendFile;
+	TIdFTP *IdFTP1;
+	TMenuItem *SendFile1;
+	TTabSheet *TabSheet4;
+	TAction *actGetPwd;
+	TMenuItem *GetPwd1;
+	TPanel *Panel7;
+	TPanel *Panel8;
+	TPanel *Panel9;
+	TSplitter *Splitter2;
+	TBitBtn *BitBtn5;
+	TAction *actRefreshOrderFiles;
+	TListView *lvOut;
+	TListView *lvIn;
+	TIdFTP *IdFTP2;
 	void __fastcall FileOpen1Accept(TObject *Sender);
 	void __fastcall TabSheet1Show(TObject *Sender);
 	void __fastcall btnNewCustomerClick(TObject *Sender);
@@ -89,6 +113,12 @@ __published:	// IDE-managed Components
 	void __fastcall actRefreshOrdersExecute(TObject *Sender);
 	void __fastcall Auric1Click(TObject *Sender);
 	void __fastcall actCommitExecute(TObject *Sender);
+	void __fastcall actSendFileExecute(TObject *Sender);
+	void __fastcall IdFTP1AfterClientLogin(TObject *Sender);
+	void __fastcall actGetPwdExecute(TObject *Sender);
+	void __fastcall actRefreshOrderFilesExecute(TObject *Sender);
+	void __fastcall IdFTP2AfterClientLogin(TObject *Sender);
+	void __fastcall IdFTP2AfterPut(TObject *Sender);
 
 private:	// User declarations
 public:		// User declarations

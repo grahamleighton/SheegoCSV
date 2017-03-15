@@ -59,7 +59,6 @@ __published:	// IDE-managed Components
 	TStringField *spGetOrderHeadersLastName;
 	TStringField *spGetOrderHeadersAccountNo;
 	TStringField *spGetOrderOutputCustAccount;
-	TLargeintField *spGetOrderOutputSalesIdExternal;
 	TStringField *spGetOrderOutputCurrencyCode;
 	TStringField *spGetOrderOutputCustomerRef;
 	TStringField *spGetOrderOutputReceiptDateRequested;
@@ -70,6 +69,17 @@ __published:	// IDE-managed Components
 	TIntegerField *spGetOrderOutputWholeSaleNali;
 	TADOTable *ADOTable1;
 	TBooleanField *spGetOrderDetailWholeSaleNali;
+	TStringField *spGetOrderOutputSalesIdExternal;
+	TLargeintField *spGetOrderOutputID;
+	TADOConnection *DBAMAINT;
+	TADOQuery *qryFTPPassword;
+	TADOTable *tblConfig;
+	TStringField *qryFTPPasswordpwd;
+	TLargeintField *tblConfigConfigID;
+	TStringField *tblConfigservername;
+	TStringField *tblConfigusername;
+	TStringField *tblConfigserverpathout;
+	TStringField *tblConfigserverpathin;
 	void __fastcall spGetCustomersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersBeforeClose(TDataSet *DataSet);
@@ -77,6 +87,8 @@ private:	// User declarations
 public:		// User declarations
 	__fastcall TDM(TComponent* Owner);
 	void CreateCSV();
+
+	void setFTPDetails();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TDM *DM;
