@@ -15,6 +15,7 @@ class GConfig
 		UnicodeString fServerFolderIn;
 		UnicodeString fServerFolderOut;
 		UnicodeString fCurrentFile;
+		UnicodeString fAXAccount;
 	public:
 		bool SentOK;
 		GConfig();
@@ -28,6 +29,9 @@ class GConfig
 		void displaySettings();
 		void setCurrentFile(UnicodeString CurrentFile);
 		UnicodeString getCurrentFile();
+
+		UnicodeString getAXAccount();
+		void setAXAccount(UnicodeString AXAccount);
 
 };
 

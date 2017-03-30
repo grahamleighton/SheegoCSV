@@ -1,6 +1,6 @@
 object DM: TDM
   OldCreateOrder = False
-  Height = 314
+  Height = 628
   Width = 682
   object DB: TADOConnection
     Connected = True
@@ -9,8 +9,8 @@ object DM: TDM
       'fo=False;Initial Catalog=Sheego;Data Source=fgh-sql02'
     LoginPrompt = False
     Provider = 'SQLOLEDB.1'
-    Left = 64
-    Top = 40
+    Left = 24
+    Top = 24
   end
   object spGetCustomers: TADOStoredProc
     Connection = DB
@@ -19,8 +19,8 @@ object DM: TDM
     AfterScroll = spGetCustomersAfterScroll
     ProcedureName = 'getCustomers;1'
     Parameters = <>
-    Left = 168
-    Top = 40
+    Left = 88
+    Top = 24
     object spGetCustomersCustomerID: TLargeintField
       FieldName = 'CustomerID'
       ReadOnly = True
@@ -37,11 +37,15 @@ object DM: TDM
       FieldName = 'AccountNo'
       Size = 50
     end
+    object spGetCustomersActive: TBooleanField
+      FieldName = 'Active'
+      DisplayValues = 'Yes;No'
+    end
   end
   object dsspGetCustomers: TDataSource
     DataSet = spGetCustomers
-    Left = 168
-    Top = 104
+    Left = 152
+    Top = 24
   end
   object spDeleteCustomer: TADOCommand
     CommandText = 'deleteCustomer;1'
@@ -75,7 +79,7 @@ object DM: TDM
         DataType = ftInteger
         Direction = pdReturnValue
         Precision = 10
-        Value = 0
+        Value = Null
       end
       item
         Name = '@CustomerID'
@@ -103,6 +107,12 @@ object DM: TDM
         Attributes = [paNullable]
         DataType = ftString
         Size = 50
+        Value = Null
+      end
+      item
+        Name = '@Active'
+        Attributes = [paNullable]
+        DataType = ftBoolean
         Value = Null
       end>
     Left = 460
@@ -142,6 +152,12 @@ object DM: TDM
         Value = Null
       end
       item
+        Name = '@Active'
+        Attributes = [paNullable]
+        DataType = ftBoolean
+        Value = Null
+      end
+      item
         Name = '@CustomerID'
         Attributes = [paNullable]
         DataType = ftInteger
@@ -150,7 +166,7 @@ object DM: TDM
         Value = Null
       end>
     ParamCheck = False
-    Left = 256
+    Left = 272
     Top = 40
   end
   object spAddOrderHeader: TADOCommand
@@ -587,76 +603,275 @@ object DM: TDM
     Left = 344
     Top = 240
   end
-  object ADOTable1: TADOTable
-    Connection = DB
-    TableName = 'viewOrderOutstanding'
-    Left = 440
-    Top = 240
-  end
-  object DBAMAINT: TADOConnection
-    Connected = True
-    ConnectionString = 
-      'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
-      'fo=False;Initial Catalog=dbamaint;Data Source=fgh-sql02;Use Proc' +
-      'edure for Prepare=1;Auto Translate=True;Packet Size=4096;Worksta' +
-      'tion ID=VDIW81PERS-7;Use Encryption for Data=False;Tag with colu' +
-      'mn collation when possible=False'
-    LoginPrompt = False
-    Provider = 'SQLOLEDB.1'
-    Left = 568
-    Top = 40
-  end
-  object qryFTPPassword: TADOQuery
-    Connection = DBAMAINT
-    CursorType = ctStatic
-    Parameters = <
-      item
-        Name = 'server'
-        DataType = ftWideString
-        Size = 10
-        Value = 'ottoukfp'
-      end
-      item
-        Name = 'user'
-        DataType = ftWideString
-        Size = 14
-        Value = 'ottouk\ftnwcon'
-      end>
-    SQL.Strings = (
-      'select  dbo.fx_decrypt_pw(:server,:user) pwd')
-    Left = 568
-    Top = 104
-    object qryFTPPasswordpwd: TStringField
-      FieldName = 'pwd'
-      ReadOnly = True
-      Size = 50
-    end
-  end
-  object tblConfig: TADOTable
+  object spGetConfig: TADOStoredProc
     Connection = DB
     CursorType = ctStatic
-    TableName = 'Config'
-    Left = 568
-    Top = 176
-    object tblConfigConfigID: TLargeintField
+    ProcedureName = 'getConfig;1'
+    Parameters = <>
+    Left = 56
+    Top = 328
+    object spGetConfigConfigID: TLargeintField
       FieldName = 'ConfigID'
       ReadOnly = True
     end
-    object tblConfigservername: TStringField
+    object spGetConfigservername: TStringField
       FieldName = 'servername'
       Size = 50
     end
-    object tblConfigusername: TStringField
+    object spGetConfigusername: TStringField
       FieldName = 'username'
       Size = 50
     end
-    object tblConfigserverpathout: TStringField
+    object spGetConfigserverpathout: TStringField
       FieldName = 'serverpathout'
       Size = 150
     end
-    object tblConfigserverpathin: TStringField
+    object spGetConfigserverpathin: TStringField
       FieldName = 'serverpathin'
       Size = 150
     end
+    object spGetConfigaxcustaccount: TStringField
+      FieldName = 'axcustaccount'
+      Size = 50
+    end
+  end
+  object dsspGetConfig: TDataSource
+    DataSet = spGetConfigAdmin
+    Left = 136
+    Top = 328
+  end
+  object spUpdateConfig: TADOStoredProc
+    Connection = DB
+    ProcedureName = 'updateConfig;1'
+    Parameters = <
+      item
+        Name = '@RETURN_VALUE'
+        DataType = ftInteger
+        Direction = pdReturnValue
+        Precision = 10
+        Value = Null
+      end
+      item
+        Name = '@servername'
+        Attributes = [paNullable]
+        DataType = ftString
+        Size = 50
+        Value = Null
+      end
+      item
+        Name = '@username'
+        Attributes = [paNullable]
+        DataType = ftString
+        Size = 50
+        Value = Null
+      end
+      item
+        Name = '@serverpathout'
+        Attributes = [paNullable]
+        DataType = ftString
+        Size = 150
+        Value = Null
+      end
+      item
+        Name = '@serverpathin'
+        Attributes = [paNullable]
+        DataType = ftString
+        Size = 150
+        Value = Null
+      end
+      item
+        Name = '@AXAccount'
+        Attributes = [paNullable]
+        DataType = ftString
+        Size = 50
+        Value = Null
+      end
+      item
+        Name = '@ConfigID'
+        Attributes = [paNullable]
+        DataType = ftInteger
+        Direction = pdInputOutput
+        Precision = 10
+        Value = Null
+      end>
+    Left = 56
+    Top = 400
+  end
+  object spGetServerPassword: TADOStoredProc
+    Connection = DB
+    ProcedureName = 'getServerPwd;1'
+    Parameters = <
+      item
+        Name = '@RETURN_VALUE'
+        DataType = ftInteger
+        Direction = pdReturnValue
+        Precision = 10
+        Value = Null
+      end
+      item
+        Name = '@username'
+        Attributes = [paNullable]
+        DataType = ftString
+        Size = 50
+        Value = Null
+      end
+      item
+        Name = '@pwd'
+        Attributes = [paNullable]
+        DataType = ftString
+        Direction = pdInputOutput
+        Size = 50
+        Value = Null
+      end>
+    Left = 576
+    Top = 176
+  end
+  object spGetConfigAdmin: TADOStoredProc
+    Connection = DB
+    CursorType = ctStatic
+    AfterScroll = spGetConfigAdminAfterScroll
+    ProcedureName = 'getConfigAdmin;1'
+    Parameters = <
+      item
+        Name = '@RETURN_VALUE'
+        DataType = ftInteger
+        Direction = pdReturnValue
+        Precision = 10
+        Value = 0
+      end>
+    Left = 240
+    Top = 328
+    object spGetConfigAdminConfigID: TLargeintField
+      FieldName = 'ConfigID'
+      ReadOnly = True
+    end
+    object spGetConfigAdminservername: TStringField
+      FieldName = 'servername'
+      Size = 50
+    end
+    object spGetConfigAdminusername: TStringField
+      FieldName = 'username'
+      Size = 50
+    end
+    object spGetConfigAdminserverpathout: TStringField
+      FieldName = 'serverpathout'
+      Size = 150
+    end
+    object spGetConfigAdminserverpathin: TStringField
+      FieldName = 'serverpathin'
+      Size = 150
+    end
+    object spGetConfigAdminaxcustaccount: TStringField
+      FieldName = 'axcustaccount'
+      Size = 50
+    end
+  end
+  object spGetResponseHeaders: TADOStoredProc
+    Connection = DB
+    CursorType = ctStatic
+    AfterScroll = spGetResponseHeadersAfterScroll
+    ProcedureName = 'getResponseHeaders;1'
+    Parameters = <
+      item
+        Name = '@RETURN_VALUE'
+        DataType = ftInteger
+        Direction = pdReturnValue
+        Precision = 10
+        Value = 0
+      end>
+    Left = 400
+    Top = 328
+    object spGetResponseHeadersResponseDate: TDateTimeField
+      FieldName = 'ResponseDate'
+    end
+    object spGetResponseHeadersFileName: TStringField
+      FieldName = 'FileName'
+      Size = 250
+    end
+    object spGetResponseHeadersResponsesID: TLargeintField
+      FieldName = 'ResponsesID'
+      ReadOnly = True
+    end
+  end
+  object spGetResponseDetail: TADOStoredProc
+    Connection = DB
+    CursorType = ctStatic
+    ProcedureName = 'getResponseDetail;1'
+    Parameters = <
+      item
+        Name = '@RETURN_VALUE'
+        DataType = ftInteger
+        Direction = pdReturnValue
+        Precision = 10
+        Value = 0
+      end
+      item
+        Name = '@ResponseID'
+        Attributes = [paNullable]
+        DataType = ftInteger
+        Precision = 10
+        Value = 1
+      end>
+    Left = 400
+    Top = 392
+  end
+  object dsspGetResponseHeaders: TDataSource
+    AutoEdit = False
+    DataSet = spGetResponseHeaders
+    Left = 552
+    Top = 328
+  end
+  object dsspGetResponseDetail: TDataSource
+    AutoEdit = False
+    DataSet = spGetResponseDetail
+    Left = 552
+    Top = 392
+  end
+  object spGetResponseExport: TADOStoredProc
+    Connection = DB
+    CursorType = ctStatic
+    ProcedureName = 'getResponseExport;1'
+    Parameters = <
+      item
+        Name = '@RETURN_VALUE'
+        DataType = ftInteger
+        Direction = pdReturnValue
+        Precision = 10
+        Value = 0
+      end
+      item
+        Name = '@ResponseID'
+        Attributes = [paNullable]
+        DataType = ftInteger
+        Precision = 10
+        Value = 11
+      end>
+    Left = 400
+    Top = 456
+  end
+  object DataSource1: TDataSource
+    DataSet = spGetResponseExport
+    Left = 528
+    Top = 456
+  end
+  object cmdDeleteResponse: TADOCommand
+    CommandText = 'deleteResponse;1'
+    CommandType = cmdStoredProc
+    Connection = DB
+    Parameters = <
+      item
+        Name = '@RETURN_VALUE'
+        DataType = ftInteger
+        Direction = pdReturnValue
+        Precision = 10
+      end
+      item
+        Name = '@ResponseID'
+        Attributes = [paNullable]
+        DataType = ftInteger
+        Precision = 10
+      end>
+    Left = 400
+    Top = 520
   end
 end

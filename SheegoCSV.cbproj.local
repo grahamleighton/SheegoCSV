@@ -53,8 +53,8 @@
     <Transaction>2017/03/06 09:26:17.000.671,h:\Documents\RAD Studio\Projects\Sheego\Unit2.dfm=h:\Documents\RAD Studio\Projects\Sheego\Data.dfm</Transaction>
     <Transaction>2017/03/06 09:26:17.000.671,h:\Documents\RAD Studio\Projects\Sheego\Unit2.h=h:\Documents\RAD Studio\Projects\Sheego\Data.h</Transaction>
     <Transaction>2017/03/06 09:26:17.000.671,h:\Documents\RAD Studio\Projects\Sheego\Unit2.cpp=h:\Documents\RAD Studio\Projects\Sheego\Data.cpp</Transaction>
-    <Transaction>2017/03/15 13:01:32.654,=h:\Documents\RAD Studio\Projects\Sheego\Unit2.cpp</Transaction>
-    <Transaction>2017/03/15 13:01:48.519,h:\Documents\RAD Studio\Projects\Sheego\config.h=h:\Documents\RAD Studio\Projects\Sheego\Unit2.h</Transaction>
-    <Transaction>2017/03/15 13:01:48.519,h:\Documents\RAD Studio\Projects\Sheego\config.cpp=h:\Documents\RAD Studio\Projects\Sheego\Unit2.cpp</Transaction>
+    <Transaction>2017/03/15 13:01:32.000.654,=h:\Documents\RAD Studio\Projects\Sheego\Unit2.cpp</Transaction>
+    <Transaction>2017/03/15 13:01:48.000.519,h:\Documents\RAD Studio\Projects\Sheego\config.h=h:\Documents\RAD Studio\Projects\Sheego\Unit2.h</Transaction>
+    <Transaction>2017/03/15 13:01:48.000.519,h:\Documents\RAD Studio\Projects\Sheego\config.cpp=h:\Documents\RAD Studio\Projects\Sheego\Unit2.cpp</Transaction>
   </Transactions>
 </BorlandProject>

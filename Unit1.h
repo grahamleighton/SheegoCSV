@@ -28,20 +28,23 @@
 #include <IdTCPConnection.hpp>
 #include <Data.DB.hpp>
 #include "config.h"
+#include <Data.Bind.Components.hpp>
+#include <Data.Bind.DBScope.hpp>
+#include <Data.Bind.EngExt.hpp>
+#include <System.Bindings.Outputs.hpp>
+#include <System.Rtti.hpp>
+#include <Vcl.Bind.DBEngExt.hpp>
+#include <Vcl.Bind.Editors.hpp>
 //---------------------------------------------------------------------------
 class TfmSheego : public TForm
 {
 __published:	// IDE-managed Components
-	TMainMenu *MainMenu1;
-	TMenuItem *File1;
 	TActionList *ActionList1;
 	TFileOpen *FileOpen1;
 	TFileExit *FileExit1;
-	TMenuItem *Open1;
-	TMenuItem *Open2;
 	TPageControl *PageControl1;
-	TTabSheet *TabSheet1;
-	TTabSheet *TabSheet2;
+	TTabSheet *tabImport;
+	TTabSheet *tabCustomers;
 	TPanel *Panel1;
 	TPanel *Panel2;
 	TDBGrid *DBGrid1;
@@ -56,7 +59,7 @@ __published:	// IDE-managed Components
 	TPanel *Panel3;
 	TBitBtn *BitBtn3;
 	TLabel *lblCustomer;
-	TTabSheet *TabSheet3;
+	TTabSheet *tabOrders;
 	TPanel *Panel4;
 	TPanel *Panel5;
 	TGroupBox *GroupBox1;
@@ -69,24 +72,18 @@ __published:	// IDE-managed Components
 	TAction *actCreateCSV;
 	TButton *Button2;
 	TAction *actRefreshOrders;
-	TMenuItem *Orders1;
-	TMenuItem *RefreshOrders1;
-	TMenuItem *CreateCSV1;
 	TImageList *ImageList1;
 	TSaveDialog *SaveDialog1;
 	TLabeledEdit *txtAccountNo;
 	TDateTimePicker *DateTimePicker1;
 	TLabel *Label1;
-	TMenuItem *Theme1;
 	TBitBtn *BitBtn4;
 	TAction *actCommit;
 	TPanel *Panel6;
 	TAction *actSendFile;
 	TIdFTP *IdFTP1;
-	TMenuItem *SendFile1;
-	TTabSheet *TabSheet4;
+	TTabSheet *tabOrderFiles;
 	TAction *actGetPwd;
-	TMenuItem *GetPwd1;
 	TPanel *Panel7;
 	TPanel *Panel8;
 	TPanel *Panel9;
@@ -96,8 +93,43 @@ __published:	// IDE-managed Components
 	TListView *lvOut;
 	TListView *lvIn;
 	TIdFTP *IdFTP2;
+	TComboBox *cmbActive;
+	TLabel *Label2;
+	TTabSheet *tabInstruct;
+	TPanel *Panel10;
+	TRichEdit *RichEdit1;
+	TButton *Button3;
+	TMainMenu *MainMenu1;
+	TMenuItem *File1;
+	TMenuItem *Exit1;
+	TLabel *Label3;
+	TTabSheet *tabConfig;
+	TLabel *txtConfigID;
+	TDBGrid *DBGrid4;
+	TLabeledEdit *txtConfigServerName;
+	TLabeledEdit *txtConfigServerPathIn;
+	TLabeledEdit *txtConfigUserName;
+	TLabeledEdit *txtConfigServerPathOut;
+	TButton *Button4;
+	TLabeledEdit *txtConfigAXAccount;
+	TMenuItem *GetPwd1;
+	TTabSheet *TabSheet1;
+	TPanel *Panel11;
+	TPanel *Panel12;
+	TDBGrid *DBGrid5;
+	TPanel *Panel13;
+	TPanel *Panel14;
+	TDBGrid *DBGrid6;
+	TSplitter *Splitter3;
+	TAction *actExportResponse;
+	TButton *Button5;
+	TButton *cmdDeleteResponse;
+	TAction *actDeleteResponse;
+	TAction *actResponseRefresh;
+	TButton *Button7;
+	TStatusBar *StatusBar1;
 	void __fastcall FileOpen1Accept(TObject *Sender);
-	void __fastcall TabSheet1Show(TObject *Sender);
+	void __fastcall tabImportShow(TObject *Sender);
 	void __fastcall btnNewCustomerClick(TObject *Sender);
 	void __fastcall txtFirstNameKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall btnUpdateClick(TObject *Sender);
@@ -107,8 +139,8 @@ __published:	// IDE-managed Components
 	void __fastcall BitBtn3Click(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
-	void __fastcall TabSheet3Show(TObject *Sender);
-	void __fastcall TabSheet3Hide(TObject *Sender);
+	void __fastcall tabOrdersShow(TObject *Sender);
+	void __fastcall tabOrdersHide(TObject *Sender);
 	void __fastcall actCreateCSVExecute(TObject *Sender);
 	void __fastcall actRefreshOrdersExecute(TObject *Sender);
 	void __fastcall Auric1Click(TObject *Sender);
@@ -119,6 +151,14 @@ __published:	// IDE-managed Components
 	void __fastcall actRefreshOrderFilesExecute(TObject *Sender);
 	void __fastcall IdFTP2AfterClientLogin(TObject *Sender);
 	void __fastcall IdFTP2AfterPut(TObject *Sender);
+	void __fastcall cmbActiveChange(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall Button4Click(TObject *Sender);
+	void __fastcall tabConfigShow(TObject *Sender);
+	void __fastcall TabSheet1Show(TObject *Sender);
+	void __fastcall actExportResponseExecute(TObject *Sender);
+	void __fastcall actDeleteResponseExecute(TObject *Sender);
+	void __fastcall actResponseRefreshExecute(TObject *Sender);
 
 private:	// User declarations
 public:		// User declarations

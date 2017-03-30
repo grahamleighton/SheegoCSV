@@ -30,6 +30,18 @@ GConfig::displaySettings()
 }
 
 void
+GConfig::setAXAccount(UnicodeString AXAccount )
+{
+	fAXAccount = AXAccount;
+}
+
+UnicodeString
+GConfig::getAXAccount()
+{
+    return fAXAccount;
+}
+
+void
 GConfig::setUserAndServer(UnicodeString User , UnicodeString Server, UnicodeString ServerFolderIn,UnicodeString ServerFolderOut)
 {
 	fUser = User;

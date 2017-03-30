@@ -20,12 +20,31 @@ TDM *DM;
 __fastcall TDM::TDM(TComponent* Owner)
 	: TDataModule(Owner)
 {
-	tblConfig->Open();
 
-	if ( !tblConfig->Eof ) {
-		Config->setUserAndServer(tblConfigusername->AsString.Trim() , tblConfigservername->AsString.Trim() , tblConfigserverpathin->AsString.Trim() , tblConfigserverpathout->AsString.Trim()  );
+	spGetConfig->Active = true;
+
+	if ( !spGetConfig->Eof ) {
+		Config->setUserAndServer( spGetConfigusername->AsString.Trim() , spGetConfigservername->AsString.Trim() , spGetConfigserverpathin->AsString.Trim() , spGetConfigserverpathout->AsString.Trim()  );
+		Config->setAXAccount(spGetConfigaxcustaccount->AsString.Trim() );
 	}
-	tblConfig->Close();
+
+	spGetConfig->Active = false;
+
+
+	try
+	{
+		spGetConfigAdmin->Open() ;
+		spGetConfigAdmin->Close();
+	}
+	catch(...)
+	{
+		if ( fmSheego) {
+			fmSheego->tabConfig->TabVisible = false;
+			fmSheego->cmdDeleteResponse->Visible = false;
+			fmSheego->GetPwd1->Visible = false;
+		}
+	}
+
 
 
 
@@ -42,6 +61,19 @@ void __fastcall TDM::spGetCustomersAfterScroll(TDataSet *DataSet)
 
 	fmSheego->txtLastName->Text = DataSet->FieldByName("LastName")->AsString;
 	fmSheego->txtAccountNo->Text = DataSet->FieldByName("AccountNo")->AsString;
+
+	if ( DataSet->FieldByName("Active")->IsNull || ! DataSet->FieldByName("Active")->AsBoolean )   {
+		// false
+		fmSheego->cmbActive->ItemIndex = fmSheego->cmbActive->Items->IndexOf("No");
+	}
+	else
+	{
+		// true
+		fmSheego->cmbActive->ItemIndex = fmSheego->cmbActive->Items->IndexOf("Yes");
+	}
+
+
+
 
 	fmSheego->lblCustomer->Caption = "Using customer " + fmSheego->txtFirstName->Text + " " + fmSheego->txtLastName->Text + " (" + fmSheego->txtAccountNo->Text + ")";
 
@@ -79,14 +111,11 @@ void __fastcall TDM::spGetOrderHeadersBeforeClose(TDataSet *DataSet)
 void
 TDM::setFTPDetails()
 {
-	qryFTPPassword->Parameters->ParamByName("user")->Value = Config->getUser() ;
-	qryFTPPassword->Parameters->ParamByName("server")->Value = Config->getServer()  ;
 
-	qryFTPPassword->Open();
-	if ( ! qryFTPPassword->Eof ) {
-		Config->setPassword(qryFTPPasswordpwd->Value );
-	}
-	qryFTPPassword->Close();
+	spGetServerPassword->Parameters->ParamByName("@username")->Value = Config->getUser() ;
+	spGetServerPassword->ExecProc();
+
+	Config->setPassword(spGetServerPassword->Parameters->ParamByName("@pwd")->Value );
 
 
 
@@ -173,7 +202,7 @@ TDM::CreateCSV()
 			else
 			{
 			if ( flds->Strings[col] == "ReceiptDateRequested") {
-				rec->Add ( spGetOrderOutput->FieldByName(flds->Strings[col])->AsDateTime.FormatString("dd.mm.yyyy") );
+				rec->Add ( spGetOrderOutput->FieldByName(flds->Strings[col])->AsDateTime.FormatString("yyyy-mm-dd") );
 			}
 			else
 			{
@@ -353,4 +382,201 @@ TDM::CreateCSV()
 
 
 
+
+
+
+
+void __fastcall TDM::spGetConfigAdminAfterScroll(TDataSet *DataSet)
+{
+	fmSheego->txtConfigID->Caption = IntToStr(spGetConfigAdminConfigID->AsInteger);
+
+	fmSheego->txtConfigServerName->Text = spGetConfigAdminservername->AsString ;
+	fmSheego->txtConfigUserName->Text = spGetConfigAdminusername->AsString ;
+	fmSheego->txtConfigServerPathIn->Text = spGetConfigAdminserverpathin->AsString ;
+	fmSheego->txtConfigServerPathOut->Text = spGetConfigAdminserverpathout->AsString ;
+
+	fmSheego->txtConfigAXAccount->Text = spGetConfigAdminaxcustaccount->AsString ;
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TDM::spGetResponseHeadersAfterScroll(TDataSet *DataSet)
+{
+	spGetResponseDetail->DisableControls() ;
+
+	try
+	{
+		spGetResponseDetail->Active = false;
+		spGetResponseDetail->Parameters->ParamByName("@ResponseID")->Value =
+			spGetResponseHeadersResponsesID->Value;
+
+		spGetResponseDetail->Active = true;
+
+	}
+	catch(Exception &E)
+	{
+
+	}
+
+	spGetResponseDetail->EnableControls() ;
+
+}
+
+void
+TDM::ExportResponse(UnicodeString savename )
+{
+
+	spGetResponseExport->Parameters->ParamByName("@ResponseID")->Value =
+		spGetResponseHeadersResponsesID->Value ;
+
+	try
+	{
+		spGetResponseExport->Active = true;
+	}
+	catch(Exception &E)
+	{
+		MessageDlg ("Error during CSV creation\n\n" + E.Message , mtError , TMsgDlgButtons() << mbOK , 0 );
+		return;
+	}
+
+	if ( spGetResponseExport->Eof ) {
+		MessageDlg ( "No outstanding orders" , mtInformation , TMsgDlgButtons() << mbOK , 0 , mbOK );
+		spGetResponseExport->Active = false;
+		return;
+	}
+
+//	if ( ! fmSheego->SaveDialog1->Execute() ) {
+//		spGetOrderOutput->Close();
+//		return;
+//	}
+
+
+	TStringList *csv = new TStringList();
+	TStringList *rec = new TStringList();
+	TStringList *flds = new TStringList();
+
+	csv->Clear();
+	rec->Clear();
+	flds->Clear();
+
+	spGetResponseExport->GetFieldNames(flds);
+
+
+	flds->Delimiter = ';';
+	rec->Delimiter = ';';
+	csv->Add ( flds->DelimitedText );
+	int col = 0;
+
+	TStringList *f2 = new TStringList();
+
+	f2->Clear();
+
+	while( ! spGetResponseExport->Eof )
+	{
+		rec->Clear();
+
+		col = 0;
+		while ( col < flds->Count  )
+		{
+			if ( f2->IndexOf(flds->Strings[col]) != -1 ) {
+				rec->Add ( "" );
+			}
+			else
+			{
+			if ( flds->Strings[col] == "ReceiptDateRequestedxx") {
+				rec->Add ( spGetResponseExport->FieldByName(flds->Strings[col])->AsDateTime.FormatString("yyyy-mm-dd") );
+			}
+			else
+			{
+				if ( flds->Strings[col] != "ID") {
+					switch (spGetResponseExport->FieldByName(flds->Strings[col])->DataType) {
+						case ftInteger : {
+							rec->Add ( IntToStr(spGetResponseExport->FieldByName(flds->Strings[col])->AsInteger) ) ;
+							break;
+						}
+						case ftDate :
+						case ftDateTime :
+						{
+							rec->Add ( spGetResponseExport->FieldByName(flds->Strings[col])->AsDateTime.FormatString("dd.mm.yyyy") );
+							break;
+						}
+						case ftBoolean :
+						{
+							if (spGetResponseExport->FieldByName(flds->Strings[col])->AsBoolean == true) {
+								rec->Add ( "1");
+							}
+							else
+							{
+								rec->Add ("0");
+								}
+							break;
+						}
+					default:
+						rec->Add ( spGetResponseExport->FieldByName(flds->Strings[col])->Value ) ;
+					}
+
+				}
+			}
+			}
+
+			col++;
+		}
+		csv->Add(rec->DelimitedText );
+		spGetResponseExport->Next();
+	}
+
+	spGetResponseExport->Close();
+	delete f2;
+
+	try
+	{
+		if ( FileExists(savename) ) {
+			if (MessageDlg ( "File already exists.Overwrite ?" , mtConfirmation , TMsgDlgButtons() << mbYes << mbNo , 0 ) == mrYes ) {
+				try
+				{
+					DeleteFile(savename);
+					if ( FileExists(savename) ) {
+						MessageDlg ( "Cannot delete file ( it could be in use ) , please choose a different name" ,
+							mtWarning , TMsgDlgButtons() << mbOK , 0);
+					}
+					else
+					{
+						csv->SaveToFile(savename);
+						MessageDlg ( "Saved OK" , mtInformation , TMsgDlgButtons() << mbOK , 0 );
+					}
+				}
+				catch(Exception &E)
+				{
+					MessageDlg ( "Cannot delete file ( it could be in use ) \n" + E.Message + "\n\nPlease choose a different name" ,
+						mtWarning , TMsgDlgButtons() << mbOK , 0);
+				}
+			}
+		}
+		else
+		{
+			csv->SaveToFile(savename);
+			MessageDlg ( "Saved OK" , mtInformation , TMsgDlgButtons() << mbOK , 0 );
+		}
+
+
+	}
+	catch(Exception &E)
+	{
+		MessageDlg ( "Error saving CSV file to " + savename + "\n\n" + E.Message
+			,mtError
+			,TMsgDlgButtons() << mbOK
+			, 0 );
+	}
+
+
+
+
+	delete csv;
+	delete rec;
+	delete flds;
+
+
+}
+
+//---------------------------------------------------------------------------
 

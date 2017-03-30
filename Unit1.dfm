@@ -2,7 +2,7 @@ object fmSheego: TfmSheego
   Left = 0
   Top = 0
   Caption = 'Sheego CSV Creator Version : 1 .0'
-  ClientHeight = 600
+  ClientHeight = 620
   ClientWidth = 721
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,22 +16,31 @@ object fmSheego: TfmSheego
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 14
+  object Label3: TLabel
+    Left = 80
+    Top = 232
+    Width = 35
+    Height = 14
+    Caption = 'Label3'
+  end
   object PageControl1: TPageControl
     Left = 0
     Top = 0
     Width = 721
-    Height = 600
-    ActivePage = TabSheet3
+    Height = 601
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 0
-    object TabSheet1: TTabSheet
+    ExplicitHeight = 620
+    object tabImport: TTabSheet
       Caption = 'Import New'
-      OnShow = TabSheet1Show
+      OnShow = tabImportShow
+      ExplicitHeight = 591
       object Panel6: TPanel
         Left = 0
         Top = 0
         Width = 713
-        Height = 571
+        Height = 572
         Align = alClient
         Caption = 'Click on "Open..." to start a new order'
         Font.Charset = DEFAULT_CHARSET
@@ -41,9 +50,10 @@ object fmSheego: TfmSheego
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        ExplicitHeight = 591
         object Panel3: TPanel
           Left = 1
-          Top = 471
+          Top = 472
           Width = 711
           Height = 99
           Align = alBottom
@@ -54,6 +64,7 @@ object fmSheego: TfmSheego
           Font.Style = []
           ParentFont = False
           TabOrder = 0
+          ExplicitTop = 491
           object lblCustomer: TLabel
             Left = 0
             Top = 56
@@ -68,10 +79,10 @@ object fmSheego: TfmSheego
           end
           object Label1: TLabel
             Left = 224
-            Top = 6
-            Width = 155
+            Top = 14
+            Width = 157
             Height = 18
-            Caption = 'Receipt date Requested'
+            Caption = 'Receipt Date Requested'
           end
           object BitBtn3: TBitBtn
             Left = 121
@@ -90,7 +101,7 @@ object fmSheego: TfmSheego
           end
           object DateTimePicker1: TDateTimePicker
             Left = 385
-            Top = 6
+            Top = 10
             Width = 128
             Height = 26
             Date = 42801.630592002320000000
@@ -117,7 +128,7 @@ object fmSheego: TfmSheego
           Left = 1
           Top = 1
           Width = 711
-          Height = 470
+          Height = 471
           Align = alClient
           DrawingStyle = gdsGradient
           FixedColor = clSkyBlue
@@ -132,14 +143,16 @@ object fmSheego: TfmSheego
           ParentFont = False
           TabOrder = 1
           Visible = False
+          ExplicitHeight = 490
         end
       end
     end
-    object TabSheet3: TTabSheet
+    object tabOrders: TTabSheet
       Caption = 'Orders'
       ImageIndex = 2
-      OnHide = TabSheet3Hide
-      OnShow = TabSheet3Show
+      OnHide = tabOrdersHide
+      OnShow = tabOrdersShow
+      ExplicitHeight = 591
       object Splitter1: TSplitter
         Left = 0
         Top = 225
@@ -288,7 +301,7 @@ object fmSheego: TfmSheego
         Left = 0
         Top = 228
         Width = 713
-        Height = 343
+        Height = 344
         Align = alClient
         Caption = 'Panel5'
         Font.Charset = DEFAULT_CHARSET
@@ -298,19 +311,21 @@ object fmSheego: TfmSheego
         Font.Style = []
         ParentFont = False
         TabOrder = 1
+        ExplicitHeight = 363
         object GroupBox2: TGroupBox
           Left = 1
           Top = 1
           Width = 711
-          Height = 341
+          Height = 342
           Align = alClient
           Caption = 'Order Detail'
           TabOrder = 0
+          ExplicitHeight = 361
           object DBGrid3: TDBGrid
             Left = 2
             Top = 16
             Width = 707
-            Height = 323
+            Height = 324
             Align = alClient
             DataSource = DM.dsspGetOrderDetail
             Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -436,16 +451,25 @@ object fmSheego: TfmSheego
         end
       end
     end
-    object TabSheet2: TTabSheet
+    object tabCustomers: TTabSheet
       Caption = 'Customers'
       ImageIndex = 1
+      ExplicitHeight = 591
       object Panel1: TPanel
         Left = 0
-        Top = 312
+        Top = 305
         Width = 713
-        Height = 259
+        Height = 267
         Align = alBottom
         TabOrder = 0
+        ExplicitTop = 324
+        object Label2: TLabel
+          Left = 48
+          Top = 106
+          Width = 34
+          Height = 14
+          Caption = 'Active'
+        end
         object txtFirstName: TLabeledEdit
           Left = 88
           Top = 24
@@ -542,20 +566,33 @@ object fmSheego: TfmSheego
           TabOrder = 2
           OnKeyDown = txtFirstNameKeyDown
         end
+        object cmbActive: TComboBox
+          Left = 88
+          Top = 106
+          Width = 114
+          Height = 22
+          Style = csDropDownList
+          TabOrder = 8
+          OnChange = cmbActiveChange
+          Items.Strings = (
+            'Yes'
+            'No')
+        end
       end
       object Panel2: TPanel
         Left = 0
         Top = 0
         Width = 713
-        Height = 312
+        Height = 305
         Align = alClient
         Caption = 'Panel2'
         TabOrder = 1
+        ExplicitHeight = 324
         object DBGrid1: TDBGrid
           Left = 1
           Top = 1
           Width = 711
-          Height = 310
+          Height = 303
           Align = alClient
           DataSource = DM.dsspGetCustomers
           Font.Charset = DEFAULT_CHARSET
@@ -594,13 +631,23 @@ object fmSheego: TfmSheego
               FieldName = 'AccountNo'
               Width = 100
               Visible = True
+            end
+            item
+              DropDownRows = 2
+              Expanded = False
+              FieldName = 'Active'
+              PickList.Strings = (
+                'Yes'
+                'No')
+              Visible = True
             end>
         end
       end
     end
-    object TabSheet4: TTabSheet
+    object tabOrderFiles: TTabSheet
       Caption = 'Order Files'
       ImageIndex = 3
+      ExplicitHeight = 591
       object Panel7: TPanel
         Left = 0
         Top = 0
@@ -609,13 +656,10 @@ object fmSheego: TfmSheego
         Align = alTop
         Caption = 'Order Files (In)'
         TabOrder = 0
-        ExplicitLeft = 136
-        ExplicitTop = 104
-        ExplicitWidth = 185
         object BitBtn5: TBitBtn
           Left = 16
           Top = 10
-          Width = 153
+          Width = 105
           Height = 25
           Action = actRefreshOrderFiles
           Caption = 'Refresh'
@@ -624,28 +668,23 @@ object fmSheego: TfmSheego
       end
       object Panel8: TPanel
         Left = 0
-        Top = 530
+        Top = 531
         Width = 713
         Height = 41
         Align = alBottom
         Caption = 'Order Files (Out)'
         TabOrder = 1
-        ExplicitLeft = 232
-        ExplicitTop = 408
-        ExplicitWidth = 185
+        ExplicitTop = 550
       end
       object Panel9: TPanel
         Left = 0
         Top = 41
         Width = 713
-        Height = 489
+        Height = 490
         Align = alClient
         Caption = 'Panel9'
         TabOrder = 2
-        ExplicitLeft = 168
-        ExplicitTop = 184
-        ExplicitWidth = 185
-        ExplicitHeight = 41
+        ExplicitHeight = 509
         object Splitter2: TSplitter
           Left = 1
           Top = 217
@@ -660,7 +699,7 @@ object fmSheego: TfmSheego
           Left = 1
           Top = 220
           Width = 711
-          Height = 268
+          Height = 269
           Align = alClient
           Columns = <
             item
@@ -679,8 +718,7 @@ object fmSheego: TfmSheego
           RowSelect = True
           TabOrder = 0
           ViewStyle = vsReport
-          ExplicitTop = 1
-          ExplicitHeight = 216
+          ExplicitHeight = 288
         end
         object lvIn: TListView
           Left = 1
@@ -705,49 +743,466 @@ object fmSheego: TfmSheego
           RowSelect = True
           TabOrder = 1
           ViewStyle = vsReport
-          ExplicitLeft = 2
-          ExplicitTop = 9
+        end
+      end
+    end
+    object tabInstruct: TTabSheet
+      Caption = 'Instructions'
+      ImageIndex = 4
+      ExplicitHeight = 591
+      object Panel10: TPanel
+        Left = 0
+        Top = 0
+        Width = 713
+        Height = 572
+        Align = alClient
+        TabOrder = 0
+        ExplicitHeight = 591
+        object RichEdit1: TRichEdit
+          AlignWithMargins = True
+          Left = 101
+          Top = 31
+          Width = 511
+          Height = 510
+          Margins.Left = 100
+          Margins.Top = 30
+          Margins.Right = 100
+          Margins.Bottom = 30
+          Align = alClient
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Lines.Strings = (
+            '')
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 0
+          ExplicitHeight = 529
+        end
+        object Button3: TButton
+          Left = 8
+          Top = 30
+          Width = 75
+          Height = 25
+          Caption = 'Print'
+          TabOrder = 1
+          OnClick = Button3Click
+        end
+      end
+    end
+    object tabConfig: TTabSheet
+      Caption = 'Config'
+      ImageIndex = 5
+      OnShow = tabConfigShow
+      ExplicitHeight = 591
+      object txtConfigID: TLabel
+        Left = 80
+        Top = 208
+        Width = 4
+        Height = 14
+        Visible = False
+      end
+      object DBGrid4: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 713
+        Height = 201
+        Align = alTop
+        DataSource = DM.dsspGetConfig
+        Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        ReadOnly = True
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -12
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'ConfigID'
+            Title.Caption = 'ID'
+            Width = 40
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'servername'
+            Width = 120
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'username'
+            Width = 120
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'serverpathout'
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'serverpathin'
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'axcustaccount'
+            Title.Caption = 'AX Account'
+            Visible = True
+          end>
+      end
+      object txtConfigServerName: TLabeledEdit
+        Left = 80
+        Top = 232
+        Width = 121
+        Height = 22
+        EditLabel.Width = 70
+        EditLabel.Height = 14
+        EditLabel.Caption = 'Server Name'
+        LabelPosition = lpLeft
+        TabOrder = 1
+      end
+      object txtConfigServerPathIn: TLabeledEdit
+        Left = 80
+        Top = 332
+        Width = 321
+        Height = 22
+        EditLabel.Width = 40
+        EditLabel.Height = 14
+        EditLabel.Caption = 'Path In'
+        LabelPosition = lpLeft
+        TabOrder = 2
+      end
+      object txtConfigUserName: TLabeledEdit
+        Left = 80
+        Top = 260
+        Width = 121
+        Height = 22
+        EditLabel.Width = 59
+        EditLabel.Height = 14
+        EditLabel.Caption = 'User Name'
+        LabelPosition = lpLeft
+        TabOrder = 3
+      end
+      object txtConfigServerPathOut: TLabeledEdit
+        Left = 80
+        Top = 304
+        Width = 321
+        Height = 22
+        EditLabel.Width = 50
+        EditLabel.Height = 14
+        EditLabel.Caption = 'Path Out'
+        LabelPosition = lpLeft
+        TabOrder = 4
+      end
+      object Button4: TButton
+        Left = 24
+        Top = 416
+        Width = 75
+        Height = 25
+        Caption = 'Update'
+        TabOrder = 5
+        OnClick = Button4Click
+      end
+      object txtConfigAXAccount: TLabeledEdit
+        Left = 80
+        Top = 372
+        Width = 121
+        Height = 22
+        EditLabel.Width = 44
+        EditLabel.Height = 14
+        EditLabel.Caption = 'AX Acct'
+        LabelPosition = lpLeft
+        TabOrder = 6
+      end
+    end
+    object TabSheet1: TTabSheet
+      Caption = 'Responses'
+      ImageIndex = 6
+      OnShow = TabSheet1Show
+      ExplicitHeight = 591
+      object Splitter3: TSplitter
+        Left = 0
+        Top = 321
+        Width = 713
+        Height = 3
+        Cursor = crVSplit
+        Align = alTop
+        ExplicitLeft = 1
+        ExplicitTop = 42
+        ExplicitWidth = 278
+      end
+      object Panel11: TPanel
+        Left = 0
+        Top = 324
+        Width = 713
+        Height = 248
+        Align = alClient
+        Caption = 'pnlResponseHeader'
+        TabOrder = 0
+        ExplicitHeight = 267
+        object Panel12: TPanel
+          Left = 1
+          Top = 1
+          Width = 711
+          Height = 41
+          Align = alTop
+          Caption = 'Response Detail'
+          TabOrder = 0
+          object Button7: TButton
+            Left = 8
+            Top = 10
+            Width = 75
+            Height = 25
+            Action = actResponseRefresh
+            TabOrder = 0
+          end
+        end
+        object DBGrid5: TDBGrid
+          Left = 1
+          Top = 42
+          Width = 711
+          Height = 205
+          Align = alClient
+          DataSource = DM.dsspGetResponseDetail
+          Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          ReadOnly = True
+          TabOrder = 1
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -12
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'ResponseID'
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'ResponseDetailID'
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'RecType'
+              Title.Caption = 'Type'
+              Width = 50
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'CustAccount'
+              Width = 90
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'SalesIdExternal'
+              Width = 250
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'CurrencyCode'
+              Title.Caption = 'Currency'
+              Width = 55
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'CustomerRef'
+              Width = 150
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ReceiptDateRequested'
+              Title.Caption = 'Receipt Reqd'
+              Width = 120
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'firstName'
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'lastName'
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'OrderType'
+              Width = 100
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'SalesId'
+              Width = 100
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'TotalPrice'
+              Width = 100
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'SKU'
+              Width = 200
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'Qty'
+              Width = 90
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ReservedQty'
+              Width = 90
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'SkuPrice'
+              Width = 120
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'WholesaleNali'
+              Width = 120
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ErrType'
+              Width = 120
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ErrText'
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'SkuId'
+              Visible = True
+            end>
+        end
+      end
+      object Panel13: TPanel
+        Left = 0
+        Top = 0
+        Width = 713
+        Height = 321
+        Align = alTop
+        Caption = 'pnlResponseHeader'
+        TabOrder = 1
+        object Panel14: TPanel
+          Left = 1
+          Top = 1
+          Width = 711
+          Height = 41
+          Align = alTop
+          Caption = 'Responses'
+          TabOrder = 0
+          DesignSize = (
+            711
+            41)
+          object Button5: TButton
+            Left = 8
+            Top = 8
+            Width = 75
+            Height = 25
+            Action = actExportResponse
+            TabOrder = 0
+          end
+          object cmdDeleteResponse: TButton
+            Left = 624
+            Top = 10
+            Width = 75
+            Height = 25
+            Action = actDeleteResponse
+            Anchors = [akTop, akRight]
+            TabOrder = 1
+          end
+        end
+        object DBGrid6: TDBGrid
+          Left = 1
+          Top = 42
+          Width = 711
+          Height = 278
+          Align = alClient
+          DataSource = DM.dsspGetResponseHeaders
+          Options = [dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          ReadOnly = True
+          TabOrder = 1
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -12
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'ReponsesID'
+              Visible = False
+            end
+            item
+              Expanded = False
+              FieldName = 'ResponseDate'
+              Title.Caption = 'Response Date'
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'FileName'
+              Title.Caption = 'File Name'
+              Width = 64
+              Visible = True
+            end>
         end
       end
     end
   end
-  object MainMenu1: TMainMenu
-    Images = ImageList1
-    Left = 440
-    Top = 64
-    object File1: TMenuItem
-      Caption = 'File'
-      object Open1: TMenuItem
-        Action = FileOpen1
-        ImageIndex = 4
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 601
+    Width = 721
+    Height = 19
+    Panels = <
+      item
+        Text = 'User ID'
+        Width = 50
       end
-      object Open2: TMenuItem
-        Action = FileExit1
+      item
+        Width = 120
       end
-      object GetPwd1: TMenuItem
-        Action = actGetPwd
+      item
+        Width = 300
       end
-    end
-    object Orders1: TMenuItem
-      Caption = 'Orders'
-      object RefreshOrders1: TMenuItem
-        Action = actRefreshOrders
-        ImageIndex = 10
-        ShortCut = 116
-      end
-      object CreateCSV1: TMenuItem
-        Action = actCreateCSV
-        ImageIndex = 8
-      end
-      object SendFile1: TMenuItem
-        Action = actSendFile
-      end
-    end
-    object Theme1: TMenuItem
-      AutoHotkeys = maManual
-      Caption = 'Theme'
-      Visible = False
-    end
+      item
+        Width = 50
+      end>
+    ExplicitLeft = 1
+    ExplicitTop = 247
+    ExplicitWidth = 711
   end
   object ActionList1: TActionList
     Images = ImageList1
@@ -801,12 +1256,27 @@ object fmSheego: TfmSheego
       ImageIndex = 10
       OnExecute = actRefreshOrderFilesExecute
     end
+    object actExportResponse: TAction
+      Category = 'File'
+      Caption = 'Export '
+      OnExecute = actExportResponseExecute
+    end
+    object actDeleteResponse: TAction
+      Category = 'File'
+      Caption = 'Delete'
+      OnExecute = actDeleteResponseExecute
+    end
+    object actResponseRefresh: TAction
+      Category = 'File'
+      Caption = 'Refresh'
+      OnExecute = actResponseRefreshExecute
+    end
   end
   object ImageList1: TImageList
-    Left = 296
-    Top = 104
+    Left = 360
+    Top = 88
     Bitmap = {
-      494C01010C0018003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C001800540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1355,8 +1825,8 @@ object fmSheego: TfmSheego
     ProxySettings.ProxyType = fpcmNone
     ProxySettings.Port = 0
     OnAfterClientLogin = IdFTP1AfterClientLogin
-    Left = 56
-    Top = 344
+    Left = 512
+    Top = 352
   end
   object IdFTP2: TIdFTP
     IPVersion = Id_IPv4
@@ -1367,7 +1837,20 @@ object fmSheego: TfmSheego
     ProxySettings.Port = 0
     OnAfterClientLogin = IdFTP2AfterClientLogin
     OnAfterPut = IdFTP2AfterPut
-    Left = 144
-    Top = 344
+    Left = 504
+    Top = 296
+  end
+  object MainMenu1: TMainMenu
+    Left = 432
+    Top = 168
+    object File1: TMenuItem
+      Caption = 'File'
+      object Exit1: TMenuItem
+        Action = FileExit1
+      end
+      object GetPwd1: TMenuItem
+        Action = actGetPwd
+      end
+    end
   end
 end

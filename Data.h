@@ -67,26 +67,48 @@ __published:	// IDE-managed Components
 	TStringField *spGetOrderOutputsku;
 	TStringField *spGetOrderOutputMenge;
 	TIntegerField *spGetOrderOutputWholeSaleNali;
-	TADOTable *ADOTable1;
 	TBooleanField *spGetOrderDetailWholeSaleNali;
 	TStringField *spGetOrderOutputSalesIdExternal;
 	TLargeintField *spGetOrderOutputID;
-	TADOConnection *DBAMAINT;
-	TADOQuery *qryFTPPassword;
-	TADOTable *tblConfig;
-	TStringField *qryFTPPasswordpwd;
-	TLargeintField *tblConfigConfigID;
-	TStringField *tblConfigservername;
-	TStringField *tblConfigusername;
-	TStringField *tblConfigserverpathout;
-	TStringField *tblConfigserverpathin;
+	TBooleanField *spGetCustomersActive;
+	TADOStoredProc *spGetConfig;
+	TLargeintField *spGetConfigConfigID;
+	TStringField *spGetConfigservername;
+	TStringField *spGetConfigusername;
+	TStringField *spGetConfigserverpathout;
+	TStringField *spGetConfigserverpathin;
+	TDataSource *dsspGetConfig;
+	TADOStoredProc *spUpdateConfig;
+	TADOStoredProc *spGetServerPassword;
+	TADOStoredProc *spGetConfigAdmin;
+	TLargeintField *spGetConfigAdminConfigID;
+	TStringField *spGetConfigAdminservername;
+	TStringField *spGetConfigAdminusername;
+	TStringField *spGetConfigAdminserverpathout;
+	TStringField *spGetConfigAdminserverpathin;
+	TStringField *spGetConfigAdminaxcustaccount;
+	TStringField *spGetConfigaxcustaccount;
+	TADOStoredProc *spGetResponseHeaders;
+	TADOStoredProc *spGetResponseDetail;
+	TDataSource *dsspGetResponseHeaders;
+	TDataSource *dsspGetResponseDetail;
+	TDateTimeField *spGetResponseHeadersResponseDate;
+	TStringField *spGetResponseHeadersFileName;
+	TLargeintField *spGetResponseHeadersResponsesID;
+	TADOStoredProc *spGetResponseExport;
+	TDataSource *DataSource1;
+	TADOCommand *cmdDeleteResponse;
 	void __fastcall spGetCustomersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersBeforeClose(TDataSet *DataSet);
+	void __fastcall spGetConfigAdminAfterScroll(TDataSet *DataSet);
+	void __fastcall spGetResponseHeadersAfterScroll(TDataSet *DataSet);
+
 private:	// User declarations
 public:		// User declarations
 	__fastcall TDM(TComponent* Owner);
 	void CreateCSV();
+	void ExportResponse(UnicodeString savefile );
 
 	void setFTPDetails();
 };

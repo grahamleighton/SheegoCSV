@@ -27,6 +27,23 @@ __fastcall TfmSheego::TfmSheego(TComponent* Owner)
 	: TForm(Owner)
 {
 	Config = new GConfig();
+	char user[255];
+
+	unsigned long l = 255;
+
+	memset( user , 0 , 255 );
+
+	GetUserNameA(user,&l);
+
+	UnicodeString usr ;
+
+	usr = user;
+	StatusBar1->Panels->Items[1]->Text = usr.UpperCase();
+
+
+
+
+
 }
 //---------------------------------------------------------------------------
 
@@ -229,8 +246,8 @@ TfmSheego::LoadCSVFile(UnicodeString CSVFile)
 	delete rec;
 	delete csv;
 
-	TabSheet1->TabVisible = true;
-	PageControl1->ActivePage = TabSheet1;
+	tabImport->TabVisible = true;
+	PageControl1->ActivePage  = tabImport;
 
 }
 
@@ -259,10 +276,20 @@ void __fastcall TfmSheego::FileOpen1Accept(TObject *Sender)
 
 
 
-void __fastcall TfmSheego::TabSheet1Show(TObject *Sender)
+void __fastcall TfmSheego::tabImportShow(TObject *Sender)
 {
-	DM->spGetCustomers->Active = true;
 
+	if (! DM->spGetCustomers->Active ) {
+		DM->spGetCustomers->Active = true;
+		if (! DM->spGetCustomers->Eof ) {
+			//if not eof then find first with active = 1
+			if ( ! DM->spGetCustomers->Locate("Active",1,TLocateOptions() ) )
+			{
+				// couldn't find an active one so default to first record
+				DM->spGetCustomers->First();
+			}
+		}
+	}
 }
 //---------------------------------------------------------------------------
 
@@ -305,7 +332,8 @@ void __fastcall TfmSheego::btnUpdateClick(TObject *Sender)
 			txtLastName->Text.Trim();
 		sp->Parameters->ParamByName("@AccountNo")->Value =
 			txtAccountNo->Text.Trim();
-
+		sp->Parameters->ParamByName("@Active")->Value =
+				( cmbActive->Text == "Yes" ) ? 1 : 0;
 		try
 		{
 			sp->Execute() ;
@@ -336,6 +364,10 @@ void __fastcall TfmSheego::btnUpdateClick(TObject *Sender)
 
 		sp->Parameters->ParamByName("@AccountNo")->Value =
 			txtAccountNo->Text.Trim();
+
+		sp->Parameters->ParamByName("@Active")->Value =
+				( cmbActive->Text == "Yes" ) ? 1 : 0;
+
 		try
 		{
 			sp->Execute() ;
@@ -426,14 +458,6 @@ void __fastcall TfmSheego::BitBtn3Click(TObject *Sender)
 	// Commit
 
 
-
-
-
-
-
-
-
-
 }
 //---------------------------------------------------------------------------
 
@@ -443,7 +467,13 @@ void __fastcall TfmSheego::FormShow(TObject *Sender)
 {
 	DateTimePicker1->Date = IncDay(Date(),1);
 
-	DM->spGetCustomers->Active = true;
+	RichEdit1->Lines->LoadFromFile("I:\\whseapps\\sheego\\instructions\\instructions.rtf");
+
+	PageControl1->ActivePage = tabImport;
+
+
+
+//	DM->spGetCustomers->Active = true;
 
 
 #if 0
@@ -506,7 +536,7 @@ void __fastcall TfmSheego::Button1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TfmSheego::TabSheet3Show(TObject *Sender)
+void __fastcall TfmSheego::tabOrdersShow(TObject *Sender)
 {
 	DM->spGetOrderHeaders->Active = true;
 
@@ -526,7 +556,7 @@ TfmSheego::RefreshOrders()
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TfmSheego::TabSheet3Hide(TObject *Sender)
+void __fastcall TfmSheego::tabOrdersHide(TObject *Sender)
 {
 	DM->spGetOrderHeaders->Active = false;
 }
@@ -675,6 +705,10 @@ void __fastcall TfmSheego::actCommitExecute(TObject *Sender)
 
 void __fastcall TfmSheego::actSendFileExecute(TObject *Sender)
 {
+
+	StatusBar1->Panels->Items[2]->Text = "Setting FTP details...";
+	Application->ProcessMessages();
+
 	DM->setFTPDetails() ;
 
 	IdFTP2->Host = Config->getServer() ;
@@ -684,6 +718,8 @@ void __fastcall TfmSheego::actSendFileExecute(TObject *Sender)
 	try
 	{
 		if ( ! IdFTP2->Connected() ) {
+			StatusBar1->Panels->Items[2]->Text = "Connecting to FTP Server...";
+			Application->ProcessMessages();
 			IdFTP2->Connect();
 		}
 
@@ -691,6 +727,8 @@ void __fastcall TfmSheego::actSendFileExecute(TObject *Sender)
 	catch(Exception &E)
 	{
 		if (E.Message.UpperCase().Pos("ALREADY CONNECTED") > 0 ) {
+			StatusBar1->Panels->Items[2]->Text = "Connecting to FTP Server...";
+			Application->ProcessMessages();
 			IdFTP2AfterClientLogin(Sender);
 		}
 		else
@@ -708,7 +746,12 @@ void __fastcall TfmSheego::actSendFileExecute(TObject *Sender)
 void __fastcall TfmSheego::IdFTP1AfterClientLogin(TObject *Sender)
 {
 
-	IdFTP1->ChangeDir("/");
+	static UnicodeString pwd = IdFTP1->RetrieveCurrentDir() ;
+
+	if (!pwd.IsEmpty() ) {
+		 IdFTP1->ChangeDir(pwd);
+	}
+
 	IdFTP1->ChangeDir(Config->getServerFolderIn() );
 
 	IdFTP1->List();
@@ -727,7 +770,7 @@ void __fastcall TfmSheego::IdFTP1AfterClientLogin(TObject *Sender)
 			i++;
 		}
 
-	IdFTP1->ChangeDir("/");
+	IdFTP1->ChangeDir(pwd);
 	IdFTP1->ChangeDir(Config->getServerFolderOut() );
 
 
@@ -780,9 +823,17 @@ void __fastcall TfmSheego::actRefreshOrderFilesExecute(TObject *Sender)
 {
 	DM->setFTPDetails() ;
 
+	StatusBar1->Panels->Items[2]->Text = "Refreshing...";
+	Application->ProcessMessages();
+
+
 	IdFTP1->Host = Config->getServer() ;
 	IdFTP1->Username = Config->getUser() ;
 	IdFTP1->Password = Config->getPassword() ;
+
+
+	lvIn->Items->Clear() ;
+	lvOut->Items->Clear() ;
 
  //	Config->displaySettings() ;
 
@@ -791,6 +842,8 @@ void __fastcall TfmSheego::actRefreshOrderFilesExecute(TObject *Sender)
 		if ( ! IdFTP1->Connected() ) {
 			IdFTP1->Connect();
 		}
+		else
+			IdFTP1AfterClientLogin(Sender);
 
 	}
 	catch(Exception &E)
@@ -802,6 +855,8 @@ void __fastcall TfmSheego::actRefreshOrderFilesExecute(TObject *Sender)
 			MessageDlg ( E.Message , mtError , TMsgDlgButtons() << mbOK , 0 );
 	}
 
+	StatusBar1->Panels->Items[2]->Text = "";
+	Application->ProcessMessages();
 
 
 
@@ -811,8 +866,15 @@ void __fastcall TfmSheego::actRefreshOrderFilesExecute(TObject *Sender)
 
 void __fastcall TfmSheego::IdFTP2AfterClientLogin(TObject *Sender)
 {
+
+	StatusBar1->Panels->Items[2]->Text = "Changing directory...";
+	Application->ProcessMessages();
+
+
 	IdFTP2->ChangeDir(Config->getServerFolderOut() );
 
+	StatusBar1->Panels->Items[2]->Text = "Sending File...";
+	Application->ProcessMessages();
 	IdFTP2->Put(Config->getCurrentFile() );
 
 
@@ -835,9 +897,149 @@ void __fastcall TfmSheego::IdFTP2AfterPut(TObject *Sender)
 {
 	Config->SentOK = true;
 
+	StatusBar1->Panels->Items[2]->Text = "Sent File OK";
+	Application->ProcessMessages();
+
+	Sleep(1500);
+
+	StatusBar1->Panels->Items[2]->Text = "";
+	Application->ProcessMessages();
+
+
 
 
 }
 //---------------------------------------------------------------------------
 
+
+
+void __fastcall TfmSheego::cmbActiveChange(TObject *Sender)
+{
+	btnUpdate->Enabled = true;
+	btnCancel->Enabled = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::Button3Click(TObject *Sender)
+{
+	RichEdit1->Print("Instructions");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::Button4Click(TObject *Sender)
+{
+	if ( DM->spGetConfigAdmin->Eof || txtConfigID->Caption.IsEmpty() ) {
+		return;
+	}
+
+	DM->spUpdateConfig->Parameters->ParamByName("@ConfigID")->Value =
+		txtConfigID->Caption.ToInt();
+	DM->spUpdateConfig->Parameters->ParamByName("@servername")->Value =
+		txtConfigServerName->Text;
+	DM->spUpdateConfig->Parameters->ParamByName("@username")->Value =
+		txtConfigUserName->Text;
+	DM->spUpdateConfig->Parameters->ParamByName("@serverpathin")->Value =
+		txtConfigServerPathIn->Text;
+	DM->spUpdateConfig->Parameters->ParamByName("@serverpathout")->Value =
+		txtConfigServerPathOut->Text;
+	DM->spUpdateConfig->Parameters->ParamByName("@AXAccount")->Value =
+		txtConfigAXAccount->Text;
+
+	try
+	{
+		DM->spUpdateConfig->ExecProc();
+	}
+	catch(Exception &E)
+	{
+		MessageDlg ( "Error while updating config\n\nError : " + E.Message , mtError , TMsgDlgButtons() << mbOK , 0 );
+	}
+
+	DM->spGetConfigAdmin->Requery();
+
+	Config->setUserAndServer( txtConfigUserName->Text.Trim() , txtConfigServerName->Text.Trim() , txtConfigServerPathIn->Text.Trim() , txtConfigServerPathOut->Text.Trim()  );
+	Config->setAXAccount( txtConfigAXAccount->Text.Trim() );
+
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::tabConfigShow(TObject *Sender)
+{
+	DM->spGetConfigAdmin->Open() ;
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::TabSheet1Show(TObject *Sender)
+{
+	if ( ! DM->spGetResponseHeaders->Active  ) {
+		DM->spGetResponseHeaders->Active = true;
+	}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::actExportResponseExecute(TObject *Sender)
+{
+	if ( SaveDialog1->Execute() ) {
+        DM->ExportResponse(SaveDialog1->FileName );
+	}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::actDeleteResponseExecute(TObject *Sender)
+{
+
+	if ( ! DM->spGetResponseHeaders->Active || DM->spGetResponseHeadersResponsesID->IsNull  ) {
+		return;
+	}
+
+	if ( InputBox ( "Confirm delete ?" ,"Are you sure you wish to remove this order  ? Type \"YES\" to confirm","" ) != "YES" ) {
+		return;
+	}
+
+
+	DM->cmdDeleteResponse->Parameters->ParamByName("@ResponseID")->Value =
+		DM->spGetResponseHeadersResponsesID->Value;
+
+	try
+	{
+		DM->cmdDeleteResponse->Execute();
+		MessageDlg ( "Response deleted OK", mtInformation , TMsgDlgButtons() << mbOK , 0 );
+	}
+	catch(Exception &E)
+	{
+		MessageDlg ( "Error deleting Response record\n\n" + E.Message , mtError , TMsgDlgButtons() << mbOK , 0 );
+	}
+
+	actResponseRefresh->Execute() ;
+
+
+
+
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::actResponseRefreshExecute(TObject *Sender)
+{
+	try
+	{
+		StatusBar1->Panels->Items[2]->Text = "Refreshing...";
+		Application->ProcessMessages();
+
+		DM->spGetResponseHeaders->Active = false;
+		DM->spGetResponseHeaders->Active = true;
+	}
+	catch(Exception &E)
+	{
+		MessageDlg ( "Error refreshing Responses\n\n" + E.Message , mtError , TMsgDlgButtons() << mbOK , 0 );
+
+	}
+	StatusBar1->Panels->Items[2]->Text = "";
+	Application->ProcessMessages();
+
+}
+//---------------------------------------------------------------------------
 
