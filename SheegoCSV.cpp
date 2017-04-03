@@ -6,8 +6,9 @@
 //---------------------------------------------------------------------------
 #include <Vcl.Styles.hpp>
 #include <Vcl.Themes.hpp>
-USEFORM("Unit1.cpp", fmSheego);
 USEFORM("Data.cpp", DM); /* TDataModule: File Type */
+USEFORM("Progress.cpp", fmProgress);
+USEFORM("Unit1.cpp", fmSheego);
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {

@@ -1,0 +1,66 @@
+object fmProgress: TfmProgress
+  Left = 0
+  Top = 0
+  BorderStyle = bsNone
+  Caption = 'fmProgress'
+  ClientHeight = 116
+  ClientWidth = 543
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -19
+  Font.Name = 'Verdana'
+  Font.Style = []
+  FormStyle = fsStayOnTop
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  Visible = True
+  PixelsPerInch = 96
+  TextHeight = 23
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 543
+    Height = 116
+    Align = alClient
+    BevelKind = bkSoft
+    BorderStyle = bsSingle
+    TabOrder = 0
+    object Animate1: TAnimate
+      Left = 112
+      Top = 8
+      Width = 272
+      Height = 60
+      CommonAVI = aviCopyFiles
+      DoubleBuffered = True
+      ParentDoubleBuffered = False
+      StopFrame = 34
+    end
+    object Label1: TEdit
+      Left = 16
+      Top = 74
+      Width = 497
+      Height = 23
+      TabStop = False
+      Alignment = taCenter
+      AutoSize = False
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Verdana'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 1
+      Text = 'Label1'
+    end
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 10
+    OnTimer = Timer1Timer
+    Left = 416
+    Top = 24
+  end
+end

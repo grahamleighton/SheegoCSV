@@ -28,14 +28,12 @@ object fmSheego: TfmSheego
     Top = 0
     Width = 721
     Height = 601
-    ActivePage = TabSheet1
+    ActivePage = tabOrders
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 620
     object tabImport: TTabSheet
       Caption = 'Import New'
       OnShow = tabImportShow
-      ExplicitHeight = 591
       object Panel6: TPanel
         Left = 0
         Top = 0
@@ -50,7 +48,6 @@ object fmSheego: TfmSheego
         Font.Style = []
         ParentFont = False
         TabOrder = 0
-        ExplicitHeight = 591
         object Panel3: TPanel
           Left = 1
           Top = 472
@@ -64,7 +61,6 @@ object fmSheego: TfmSheego
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitTop = 491
           object lblCustomer: TLabel
             Left = 0
             Top = 56
@@ -143,7 +139,6 @@ object fmSheego: TfmSheego
           ParentFont = False
           TabOrder = 1
           Visible = False
-          ExplicitHeight = 490
         end
       end
     end
@@ -152,7 +147,6 @@ object fmSheego: TfmSheego
       ImageIndex = 2
       OnHide = tabOrdersHide
       OnShow = tabOrdersShow
-      ExplicitHeight = 591
       object Splitter1: TSplitter
         Left = 0
         Top = 225
@@ -311,7 +305,6 @@ object fmSheego: TfmSheego
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitHeight = 363
         object GroupBox2: TGroupBox
           Left = 1
           Top = 1
@@ -320,7 +313,6 @@ object fmSheego: TfmSheego
           Align = alClient
           Caption = 'Order Detail'
           TabOrder = 0
-          ExplicitHeight = 361
           object DBGrid3: TDBGrid
             Left = 2
             Top = 16
@@ -446,6 +438,18 @@ object fmSheego: TfmSheego
                 Expanded = False
                 FieldName = 'WholeSaleNali'
                 Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'AmountConfirmed'
+                Width = 64
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'DateConfirmed'
+                Width = 64
+                Visible = True
               end>
           end
         end
@@ -454,7 +458,6 @@ object fmSheego: TfmSheego
     object tabCustomers: TTabSheet
       Caption = 'Customers'
       ImageIndex = 1
-      ExplicitHeight = 591
       object Panel1: TPanel
         Left = 0
         Top = 305
@@ -462,7 +465,6 @@ object fmSheego: TfmSheego
         Height = 267
         Align = alBottom
         TabOrder = 0
-        ExplicitTop = 324
         object Label2: TLabel
           Left = 48
           Top = 106
@@ -587,7 +589,6 @@ object fmSheego: TfmSheego
         Align = alClient
         Caption = 'Panel2'
         TabOrder = 1
-        ExplicitHeight = 324
         object DBGrid1: TDBGrid
           Left = 1
           Top = 1
@@ -647,7 +648,6 @@ object fmSheego: TfmSheego
     object tabOrderFiles: TTabSheet
       Caption = 'Order Files'
       ImageIndex = 3
-      ExplicitHeight = 591
       object Panel7: TPanel
         Left = 0
         Top = 0
@@ -674,7 +674,6 @@ object fmSheego: TfmSheego
         Align = alBottom
         Caption = 'Order Files (Out)'
         TabOrder = 1
-        ExplicitTop = 550
       end
       object Panel9: TPanel
         Left = 0
@@ -684,7 +683,6 @@ object fmSheego: TfmSheego
         Align = alClient
         Caption = 'Panel9'
         TabOrder = 2
-        ExplicitHeight = 509
         object Splitter2: TSplitter
           Left = 1
           Top = 217
@@ -718,7 +716,6 @@ object fmSheego: TfmSheego
           RowSelect = True
           TabOrder = 0
           ViewStyle = vsReport
-          ExplicitHeight = 288
         end
         object lvIn: TListView
           Left = 1
@@ -749,7 +746,6 @@ object fmSheego: TfmSheego
     object tabInstruct: TTabSheet
       Caption = 'Instructions'
       ImageIndex = 4
-      ExplicitHeight = 591
       object Panel10: TPanel
         Left = 0
         Top = 0
@@ -757,7 +753,6 @@ object fmSheego: TfmSheego
         Height = 572
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 591
         object RichEdit1: TRichEdit
           AlignWithMargins = True
           Left = 101
@@ -779,7 +774,6 @@ object fmSheego: TfmSheego
           ParentFont = False
           ReadOnly = True
           TabOrder = 0
-          ExplicitHeight = 529
         end
         object Button3: TButton
           Left = 8
@@ -796,7 +790,6 @@ object fmSheego: TfmSheego
       Caption = 'Config'
       ImageIndex = 5
       OnShow = tabConfigShow
-      ExplicitHeight = 591
       object txtConfigID: TLabel
         Left = 80
         Top = 208
@@ -927,7 +920,6 @@ object fmSheego: TfmSheego
       Caption = 'Responses'
       ImageIndex = 6
       OnShow = TabSheet1Show
-      ExplicitHeight = 591
       object Splitter3: TSplitter
         Left = 0
         Top = 321
@@ -947,7 +939,6 @@ object fmSheego: TfmSheego
         Align = alClient
         Caption = 'pnlResponseHeader'
         TabOrder = 0
-        ExplicitHeight = 267
         object Panel12: TPanel
           Left = 1
           Top = 1
@@ -1103,6 +1094,10 @@ object fmSheego: TfmSheego
               Expanded = False
               FieldName = 'SkuId'
               Visible = True
+            end
+            item
+              Expanded = False
+              Visible = True
             end>
         end
       end
@@ -1200,9 +1195,6 @@ object fmSheego: TfmSheego
       item
         Width = 50
       end>
-    ExplicitLeft = 1
-    ExplicitTop = 247
-    ExplicitWidth = 711
   end
   object ActionList1: TActionList
     Images = ImageList1
@@ -1276,7 +1268,7 @@ object fmSheego: TfmSheego
     Left = 360
     Top = 88
     Bitmap = {
-      494C01010C001800540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C0018005C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

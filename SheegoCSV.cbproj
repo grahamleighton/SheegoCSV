@@ -6,7 +6,7 @@
         <AppType>Application</AppType>
         <MainSource>SheegoCSV.cpp</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
     </PropertyGroup>
@@ -101,7 +101,11 @@
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <LinkPackageImports>rtl.bpi;vcl.bpi;dbrtl.bpi;adortl.bpi;vcldb.bpi;IndySystem.bpi;IndyProtocols.bpi;IndyCore.bpi;bindengine.bpi;bindcomp.bpi;bindcompvcl.bpi</LinkPackageImports>
+        <LinkPackageStatics>rtl.lib;vcl.lib;dbrtl.lib;adortl.lib;vcldb.lib;IndySystem.lib;IndyProtocols.lib;IndyCore.lib;bindengine.lib;bindcomp.lib;bindcompvcl.lib</LinkPackageStatics>
+        <DynamicRTL>false</DynamicRTL>
+        <UsePackages>false</UsePackages>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <ItemGroup>
         <CppCompile Include="config.cpp">
@@ -127,6 +131,12 @@
             <DependentOn>DBFParser.h</DependentOn>
             <BuildOrder>3</BuildOrder>
         </CppCompile>
+        <CppCompile Include="Progress.cpp">
+            <Form>fmProgress</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>Progress.h</DependentOn>
+            <BuildOrder>8</BuildOrder>
+        </CppCompile>
         <CppCompile Include="SheegoCSV.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
@@ -135,10 +145,10 @@
         </PCHCompile>
         <CppCompile Include="Unit1.cpp">
             <Form>fmSheego</Form>
-            <FormType>dfm</FormType>
             <DependentOn>Unit1.h</DependentOn>
-            <BuildOrder>2</BuildOrder>
+            <BuildOrder>8</BuildOrder>
         </CppCompile>
+        <FormResources Include="Progress.dfm"/>
         <FormResources Include="Unit1.dfm"/>
         <FormResources Include="Data.dfm"/>
         <BuildConfiguration Include="Release">

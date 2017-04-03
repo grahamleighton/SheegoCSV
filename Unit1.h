@@ -35,6 +35,9 @@
 #include <System.Rtti.hpp>
 #include <Vcl.Bind.DBEngExt.hpp>
 #include <Vcl.Bind.Editors.hpp>
+#include "Progress.h"
+#include <Vcl.AppEvnts.hpp>
+
 //---------------------------------------------------------------------------
 class TfmSheego : public TForm
 {

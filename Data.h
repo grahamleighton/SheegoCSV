@@ -7,6 +7,7 @@
 #include <Data.DB.hpp>
 #include <Data.Win.ADODB.hpp>
 #include "Unit1.h"
+#include "Progress.h"
 //---------------------------------------------------------------------------
 class TDM : public TDataModule
 {
@@ -98,17 +99,27 @@ __published:	// IDE-managed Components
 	TADOStoredProc *spGetResponseExport;
 	TDataSource *DataSource1;
 	TADOCommand *cmdDeleteResponse;
+	TIntegerField *spGetOrderDetailAmountConfirmed;
+	TDateTimeField *spGetOrderDetailDateConfirmed;
 	void __fastcall spGetCustomersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersBeforeClose(TDataSet *DataSet);
 	void __fastcall spGetConfigAdminAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetResponseHeadersAfterScroll(TDataSet *DataSet);
 
+
 private:	// User declarations
+	TStringList *orderids;
+
+
 public:		// User declarations
 	__fastcall TDM(TComponent* Owner);
 	void CreateCSV();
+	void CreateCSVFiles();
 	void ExportResponse(UnicodeString savefile );
+	void UpdateOrders();
+	TfmProgress *p;
+
 
 	void setFTPDetails();
 };

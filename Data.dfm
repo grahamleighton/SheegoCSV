@@ -3,10 +3,12 @@ object DM: TDM
   Height = 628
   Width = 682
   object DB: TADOConnection
-    Connected = True
     ConnectionString = 
       'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
-      'fo=False;Initial Catalog=Sheego;Data Source=fgh-sql02'
+      'fo=False;Initial Catalog=Sheego;Data Source=fgh-sql01;Use Proced' +
+      'ure for Prepare=1;Auto Translate=True;Packet Size=4096;Applicati' +
+      'on Name=SheegoCSV;Workstation ID=VDIW81PERS-7;Use Encryption for' +
+      ' Data=False;Tag with column collation when possible=False'
     LoginPrompt = False
     Provider = 'SQLOLEDB.1'
     Left = 24
@@ -492,6 +494,12 @@ object DM: TDM
       FieldName = 'WholeSaleNali'
       DisplayValues = '1;0'
     end
+    object spGetOrderDetailAmountConfirmed: TIntegerField
+      FieldName = 'AmountConfirmed'
+    end
+    object spGetOrderDetailDateConfirmed: TDateTimeField
+      FieldName = 'DateConfirmed'
+    end
   end
   object dsspGetOrderHeaders: TDataSource
     DataSet = spGetOrderHeaders
@@ -864,12 +872,14 @@ object DM: TDM
         DataType = ftInteger
         Direction = pdReturnValue
         Precision = 10
+        Value = Null
       end
       item
         Name = '@ResponseID'
         Attributes = [paNullable]
         DataType = ftInteger
         Precision = 10
+        Value = Null
       end>
     Left = 400
     Top = 520

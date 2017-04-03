@@ -21,6 +21,13 @@ __fastcall TDM::TDM(TComponent* Owner)
 	: TDataModule(Owner)
 {
 
+	orderids = new TStringList();
+	orderids->Clear();
+
+	orderids->Sorted = true;
+	orderids->Duplicates = System::Types::dupIgnore ;
+
+
 	spGetConfig->Active = true;
 
 	if ( !spGetConfig->Eof ) {
@@ -124,6 +131,75 @@ TDM::setFTPDetails()
 
 
 void
+TDM::CreateCSVFiles()
+{
+	TStringList *PO = new TStringList();
+	PO->Sorted = true;
+
+	if ( !p ) {
+		p = new TfmProgress(Application);
+	}
+	p->Animate1->Active = true;
+
+	p->Label1->Text = "Getting POs to send..";
+	Application->ProcessMessages();
+
+
+	PO->Duplicates = System::Types::dupIgnore ;
+
+	PO->Clear();
+	try
+	{
+		spGetOrderOutput->Active = true;
+		while ( ! spGetOrderOutput->Eof )
+			{
+				p->Label1->Text = "Getting POs to send..";
+				Application->ProcessMessages();
+				PO->Add(spGetOrderOutputSalesIdExternal->Value  );
+				spGetOrderOutput->Next() ;
+			}
+	}
+	catch(...)
+	{
+
+	}
+
+	int i = 0;
+
+	while ( i < PO->Count )
+		{
+			p->Label1->Text = "Creating CSV for PO " + PO->Strings[i] ;
+			Application->ProcessMessages();
+			spGetOrderOutput->Active = false;
+			p->Label1->Text = "Creating CSV for PO " + PO->Strings[i] ;
+			Application->ProcessMessages();
+			spGetOrderOutput->Filter = "[SalesIdExternal]='" + PO->Strings[i].Trim() + "'";
+			spGetOrderOutput->Filtered = true;
+			p->Label1->Text = "Creating CSV for PO " + PO->Strings[i] ;
+			Application->ProcessMessages();
+			spGetOrderOutput->Active = true;
+			p->Label1->Text = "Creating CSV for PO " + PO->Strings[i] ;
+			Application->ProcessMessages();
+			CreateCSV();
+			i++;
+		}
+	spGetOrderOutput->Active = false;
+
+	UpdateOrders() ;
+
+	delete p;
+	fmSheego->SetFocus();
+
+	MessageDlg ( "Success! All files sent to Sheego" , mtInformation , TMsgDlgButtons() << mbOK , 0 );
+
+
+
+	delete PO;
+
+}
+
+
+void
 TDM::CreateCSV()
 {
 	// creates csv
@@ -131,7 +207,7 @@ TDM::CreateCSV()
 
 
 
-	try
+/*	try
 	{
 		spGetOrderOutput->Active = true;
 	}
@@ -140,12 +216,12 @@ TDM::CreateCSV()
 		MessageDlg ("Error during CSV creation\n\n" + E.Message , mtError , TMsgDlgButtons() << mbOK , 0 );
 		return;
 	}
-
 	if ( spGetOrderOutput->Eof ) {
 		MessageDlg ( "No outstanding orders" , mtInformation , TMsgDlgButtons() << mbOK , 0 , mbOK );
 		spGetOrderOutput->Active = false;
 		return;
 	}
+*/
 
 //	if ( ! fmSheego->SaveDialog1->Execute() ) {
 //		spGetOrderOutput->Close();
@@ -156,15 +232,14 @@ TDM::CreateCSV()
 	TStringList *csv = new TStringList();
 	TStringList *rec = new TStringList();
 	TStringList *flds = new TStringList();
-	TStringList *orderids = new TStringList();
 
-	orderids->Sorted = true;
-	orderids->Duplicates = System::Types::dupIgnore ;
+
 
 	csv->Clear();
 	rec->Clear();
 	flds->Clear();
 
+	Application->ProcessMessages();
 	spGetOrderOutput->GetFieldNames(flds);
 
 	int IDix = flds->IndexOf("ID");
@@ -173,6 +248,7 @@ TDM::CreateCSV()
 		flds->Delete(IDix);
 	}
 
+	Application->ProcessMessages();
 
 	flds->Delimiter = ';';
 	rec->Delimiter = ';';
@@ -186,12 +262,14 @@ TDM::CreateCSV()
 	f2->Add("Menge");
 	f2->Add("WholeSaleNali");
 
+	Application->ProcessMessages();
 
 	if( ! spGetOrderOutput->Eof )
 	{
 		rec->Clear();
 		orderids->Add(IntToStr(spGetOrderOutputID->AsInteger) ) ;
 
+		Application->ProcessMessages();
 
 		col = 0;
 		while ( col < flds->Count  )
@@ -236,6 +314,8 @@ TDM::CreateCSV()
 				}
 			}
 			}
+			Application->ProcessMessages();
+
 
 			col++;
 		}
@@ -246,6 +326,7 @@ TDM::CreateCSV()
 		{
 			rec->Clear();
 			orderids->Add(IntToStr(spGetOrderOutputID->AsInteger) ) ;
+			Application->ProcessMessages();
 
 			col = 0;
 
@@ -293,6 +374,8 @@ TDM::CreateCSV()
 				}
 
 				col++;
+				Application->ProcessMessages();
+
 			}
 			csv->Add(rec->DelimitedText );
 
@@ -302,6 +385,8 @@ TDM::CreateCSV()
 	spGetOrderOutput->Close();
 	delete f2;
 
+	Sleep(2000);  // Note , leave the Sleep in to force filenames to be unique.
+	Application->ProcessMessages();
 
 	UnicodeString fileName = "order_fgh_sheego_" + Now().FormatString("yyyymmdd") + "_" + Now().FormatString("hhnnss") + ".csv";
 
@@ -324,16 +409,22 @@ TDM::CreateCSV()
 	delete flds;
 
 	// now send the file to the ftp folder
+	Application->ProcessMessages();
 
+	if ( p  ) {
+		p->Label1->Text = "Sending " + fileName + " to FTP Server";
+		Application->ProcessMessages();
+	}
 
 	Config->setCurrentFile("h:\\shgo\\temp\\" + fileName);
 	Config->SentOK = false;
 
+	Application->ProcessMessages();
 
 	fmSheego->actSendFile->Execute() ;
 
 
-
+#if 0
 
 	if (Config->SentOK ) {
 	// now update the orderids
@@ -371,15 +462,58 @@ TDM::CreateCSV()
 				TMsgDlgButtons() << mbOK , 0 );
 		}
 	}
+#endif
 
 
 
-	delete orderids;
 
 }
 
 //---------------------------------------------------------------------------
 
+
+void
+TDM::UpdateOrders()
+{
+		int oi = 0;
+		try
+		{
+			DB->BeginTrans() ;
+
+			while ( oi < orderids->Count)
+				{
+					if ( p ) {
+						p->Label1->Text = "Updating order " + IntToStr(oi+1) + " as sent ";
+						Application->ProcessMessages();
+					}
+
+					spUpdateOrderAsSent->Parameters->ParamByName("@OrderID")->Value =
+						orderids->Strings[oi];
+					spUpdateOrderAsSent->Execute();
+
+					oi++;
+				}
+
+			DB->CommitTrans() ;
+			orderids->Clear();
+		}
+		catch(Exception &E)
+		{
+			try
+			{
+				DB->RollbackTrans() ;
+			}
+			catch(...)
+			{
+
+			}
+			MessageDlg ( "Error while creating CSV , backing out all changes\n\n" + E.Message ,
+				mtError ,
+				TMsgDlgButtons() << mbOK , 0 );
+		}
+
+
+}
 
 
 
@@ -579,4 +713,5 @@ TDM::ExportResponse(UnicodeString savename )
 }
 
 //---------------------------------------------------------------------------
+
 

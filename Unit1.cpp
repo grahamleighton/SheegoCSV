@@ -511,10 +511,12 @@ void __fastcall TfmSheego::FormShow(TObject *Sender)
 void __fastcall TfmSheego::Button1Click(TObject *Sender)
 {
 
+
 	if ( ! DM->spGetOrderHeadersSentDate->IsNull   ) {
 		MessageDlg ( "Order has already been sent , cannot delete" , mtInformation , TMsgDlgButtons() << mbOK , 0 );
 		return;
 	}
+
 
 	if ( MessageDlg ( "Are you sure you want to delete this order ?" , mtConfirmation , TMsgDlgButtons() << mbYes << mbNo , 0 ) == mrYes ) {
 		try
@@ -522,6 +524,8 @@ void __fastcall TfmSheego::Button1Click(TObject *Sender)
 			DM->spDeleteOrder->Parameters->ParamByName("@OrderID")->Value =
 				DM->spGetOrderHeadersOrderFileHeaderID->Value ;
 			DM->spDeleteOrder->Execute();
+
+
 
 			RefreshOrders() ;
 
@@ -564,7 +568,7 @@ void __fastcall TfmSheego::tabOrdersHide(TObject *Sender)
 
 void __fastcall TfmSheego::actCreateCSVExecute(TObject *Sender)
 {
-	DM->CreateCSV();
+	DM->CreateCSVFiles();
 	RefreshOrders();
 
 
@@ -720,7 +724,13 @@ void __fastcall TfmSheego::actSendFileExecute(TObject *Sender)
 		if ( ! IdFTP2->Connected() ) {
 			StatusBar1->Panels->Items[2]->Text = "Connecting to FTP Server...";
 			Application->ProcessMessages();
+			IdFTP2->Tag = 0;
 			IdFTP2->Connect();
+		}
+		else
+		{
+			IdFTP2->Tag = 1;
+			IdFTP2AfterClientLogin(Sender);
 		}
 
 	}
@@ -870,8 +880,10 @@ void __fastcall TfmSheego::IdFTP2AfterClientLogin(TObject *Sender)
 	StatusBar1->Panels->Items[2]->Text = "Changing directory...";
 	Application->ProcessMessages();
 
+	if (IdFTP2->Tag == 0 ) {
+		IdFTP2->ChangeDir(Config->getServerFolderOut() );
 
-	IdFTP2->ChangeDir(Config->getServerFolderOut() );
+	}
 
 	StatusBar1->Panels->Items[2]->Text = "Sending File...";
 	Application->ProcessMessages();
@@ -1042,4 +1054,8 @@ void __fastcall TfmSheego::actResponseRefreshExecute(TObject *Sender)
 
 }
 //---------------------------------------------------------------------------
+
+
+
+
 
