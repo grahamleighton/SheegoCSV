@@ -131,6 +131,15 @@ __published:	// IDE-managed Components
 	TAction *actResponseRefresh;
 	TButton *Button7;
 	TStatusBar *StatusBar1;
+	TTabSheet *TabSheet2;
+	TPanel *Panel15;
+	TPanel *Panel16;
+	TPanel *Panel17;
+	TDBGrid *DBGrid7;
+	TLabeledEdit *txtFindSKU;
+	TButton *Button6;
+	TSaveDialog *SaveDialog2;
+	TButton *Button8;
 	void __fastcall FileOpen1Accept(TObject *Sender);
 	void __fastcall tabImportShow(TObject *Sender);
 	void __fastcall btnNewCustomerClick(TObject *Sender);
@@ -162,6 +171,11 @@ __published:	// IDE-managed Components
 	void __fastcall actExportResponseExecute(TObject *Sender);
 	void __fastcall actDeleteResponseExecute(TObject *Sender);
 	void __fastcall actResponseRefreshExecute(TObject *Sender);
+	void __fastcall Button6Click(TObject *Sender);
+	void __fastcall TabSheet2Show(TObject *Sender);
+	void __fastcall txtFindSKUKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall Button8Click(TObject *Sender);
+
 
 private:	// User declarations
 public:		// User declarations

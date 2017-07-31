@@ -155,7 +155,7 @@ TDM::CreateCSVFiles()
 			{
 				p->Label1->Text = "Getting POs to send..";
 				Application->ProcessMessages();
-				PO->Add(spGetOrderOutputSalesIdExternal->Value  );
+				PO->Add(spGetOrderOutputCustomerRef->Value  );
 				spGetOrderOutput->Next() ;
 			}
 	}
@@ -173,7 +173,7 @@ TDM::CreateCSVFiles()
 			spGetOrderOutput->Active = false;
 			p->Label1->Text = "Creating CSV for PO " + PO->Strings[i] ;
 			Application->ProcessMessages();
-			spGetOrderOutput->Filter = "[SalesIdExternal]='" + PO->Strings[i].Trim() + "'";
+			spGetOrderOutput->Filter = "[CustomerRef]='" + PO->Strings[i].Trim() + "'";
 			spGetOrderOutput->Filtered = true;
 			p->Label1->Text = "Creating CSV for PO " + PO->Strings[i] ;
 			Application->ProcessMessages();
@@ -394,6 +394,17 @@ TDM::CreateCSV()
 	{
 		ForceDirectories("h:\\shgo\\temp");
 		csv->SaveToFile("h:\\shgo\\temp\\" + fileName);
+
+		try
+		{
+			ForceDirectories("i:\\whseapps\\sheego\\orders");
+			csv->SaveToFile("i:\\whseapps\\sheego\\orders\\" + fileName);
+
+		}
+		catch(...)
+		{
+		}
+
 	}
 	catch(Exception &E)
 	{
@@ -713,5 +724,6 @@ TDM::ExportResponse(UnicodeString savename )
 }
 
 //---------------------------------------------------------------------------
+
 
 

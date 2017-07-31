@@ -101,6 +101,17 @@ __published:	// IDE-managed Components
 	TADOCommand *cmdDeleteResponse;
 	TIntegerField *spGetOrderDetailAmountConfirmed;
 	TDateTimeField *spGetOrderDetailDateConfirmed;
+	TDataSource *dsspGetSKUStock;
+	TADODataSet *spGetSKUStock;
+	TStringField *spGetSKUStockItemNo;
+	TStringField *spGetSKUStockSizeCode;
+	TStringField *spGetSKUStockUKSize;
+	TStringField *spGetSKUStockColour;
+	TStringField *spGetSKUStockColourName;
+	TIntegerField *spGetSKUStockAvailabilitySKU;
+	TIntegerField *spGetSKUStockInventQtyAvailPhysical;
+	TStringField *spGetSKUStockSKUId;
+	TStringField *spGetSKUStockUKItem;
 	void __fastcall spGetCustomersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersAfterScroll(TDataSet *DataSet);
 	void __fastcall spGetOrderHeadersBeforeClose(TDataSet *DataSet);

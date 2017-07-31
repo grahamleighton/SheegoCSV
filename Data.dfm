@@ -21,8 +21,8 @@ object DM: TDM
     AfterScroll = spGetCustomersAfterScroll
     ProcedureName = 'getCustomers;1'
     Parameters = <>
-    Left = 88
-    Top = 24
+    Left = 56
+    Top = 88
     object spGetCustomersCustomerID: TLargeintField
       FieldName = 'CustomerID'
       ReadOnly = True
@@ -46,8 +46,8 @@ object DM: TDM
   end
   object dsspGetCustomers: TDataSource
     DataSet = spGetCustomers
-    Left = 152
-    Top = 24
+    Left = 168
+    Top = 88
   end
   object spDeleteCustomer: TADOCommand
     CommandText = 'deleteCustomer;1'
@@ -68,7 +68,7 @@ object DM: TDM
         Precision = 10
         Value = 0
       end>
-    Left = 352
+    Left = 496
     Top = 40
   end
   object spUpdateCustomer: TADOCommand
@@ -117,7 +117,7 @@ object DM: TDM
         DataType = ftBoolean
         Value = Null
       end>
-    Left = 460
+    Left = 388
     Top = 40
   end
   object spAddCustomer: TADOCommand
@@ -168,7 +168,7 @@ object DM: TDM
         Value = Null
       end>
     ParamCheck = False
-    Left = 272
+    Left = 288
     Top = 40
   end
   object spAddOrderHeader: TADOCommand
@@ -206,8 +206,8 @@ object DM: TDM
         Value = Null
       end>
     ParamCheck = False
-    Left = 352
-    Top = 104
+    Left = 288
+    Top = 112
   end
   object spAddOrderLine: TADOCommand
     CommandText = 'addOrderLine;1'
@@ -348,8 +348,8 @@ object DM: TDM
         Value = Null
       end>
     ParamCheck = False
-    Left = 456
-    Top = 104
+    Left = 392
+    Top = 112
   end
   object spGetOrderHeaders: TADOStoredProc
     Connection = DB
@@ -358,8 +358,8 @@ object DM: TDM
     AfterScroll = spGetOrderHeadersAfterScroll
     ProcedureName = 'getOrderHeaders;1'
     Parameters = <>
-    Left = 72
-    Top = 176
+    Left = 56
+    Top = 144
     object spGetOrderHeadersOrderFileHeaderID: TLargeintField
       FieldName = 'OrderFileHeaderID'
       ReadOnly = True
@@ -417,8 +417,8 @@ object DM: TDM
         Precision = 10
         Value = Null
       end>
-    Left = 72
-    Top = 240
+    Left = 56
+    Top = 200
     object spGetOrderDetailOrderRecordID: TLargeintField
       FieldName = 'OrderRecordID'
       ReadOnly = True
@@ -503,13 +503,13 @@ object DM: TDM
   end
   object dsspGetOrderHeaders: TDataSource
     DataSet = spGetOrderHeaders
-    Left = 184
-    Top = 176
+    Left = 168
+    Top = 144
   end
   object dsspGetOrderDetail: TDataSource
     DataSet = spGetOrderDetail
-    Left = 184
-    Top = 240
+    Left = 168
+    Top = 200
   end
   object spDeleteOrder: TADOCommand
     CommandText = 'deleteOrder;1'
@@ -530,16 +530,16 @@ object DM: TDM
         Precision = 10
         Value = Null
       end>
-    Left = 344
-    Top = 176
+    Left = 496
+    Top = 112
   end
   object spGetOrderOutput: TADOStoredProc
     Connection = DB
     CursorType = ctStatic
     ProcedureName = 'getOutstandingOrderOutput;1'
     Parameters = <>
-    Left = 448
-    Top = 176
+    Left = 280
+    Top = 232
     object spGetOrderOutputCustAccount: TStringField
       FieldName = 'CustAccount'
       ReadOnly = True
@@ -608,8 +608,8 @@ object DM: TDM
         Value = Null
       end>
     ParamCheck = False
-    Left = 344
-    Top = 240
+    Left = 584
+    Top = 112
   end
   object spGetConfig: TADOStoredProc
     Connection = DB
@@ -617,7 +617,7 @@ object DM: TDM
     ProcedureName = 'getConfig;1'
     Parameters = <>
     Left = 56
-    Top = 328
+    Top = 256
     object spGetConfigConfigID: TLargeintField
       FieldName = 'ConfigID'
       ReadOnly = True
@@ -645,8 +645,8 @@ object DM: TDM
   end
   object dsspGetConfig: TDataSource
     DataSet = spGetConfigAdmin
-    Left = 136
-    Top = 328
+    Left = 168
+    Top = 256
   end
   object spUpdateConfig: TADOStoredProc
     Connection = DB
@@ -702,8 +702,8 @@ object DM: TDM
         Precision = 10
         Value = Null
       end>
-    Left = 56
-    Top = 400
+    Left = 480
+    Top = 200
   end
   object spGetServerPassword: TADOStoredProc
     Connection = DB
@@ -731,8 +731,8 @@ object DM: TDM
         Size = 50
         Value = Null
       end>
-    Left = 576
-    Top = 176
+    Left = 376
+    Top = 200
   end
   object spGetConfigAdmin: TADOStoredProc
     Connection = DB
@@ -747,8 +747,8 @@ object DM: TDM
         Precision = 10
         Value = 0
       end>
-    Left = 240
-    Top = 328
+    Left = 576
+    Top = 200
     object spGetConfigAdminConfigID: TLargeintField
       FieldName = 'ConfigID'
       ReadOnly = True
@@ -787,8 +787,8 @@ object DM: TDM
         Precision = 10
         Value = 0
       end>
-    Left = 400
-    Top = 328
+    Left = 56
+    Top = 376
     object spGetResponseHeadersResponseDate: TDateTimeField
       FieldName = 'ResponseDate'
     end
@@ -820,20 +820,20 @@ object DM: TDM
         Precision = 10
         Value = 1
       end>
-    Left = 400
-    Top = 392
+    Left = 56
+    Top = 440
   end
   object dsspGetResponseHeaders: TDataSource
     AutoEdit = False
     DataSet = spGetResponseHeaders
-    Left = 552
-    Top = 328
+    Left = 200
+    Top = 376
   end
   object dsspGetResponseDetail: TDataSource
     AutoEdit = False
     DataSet = spGetResponseDetail
-    Left = 552
-    Top = 392
+    Left = 168
+    Top = 440
   end
   object spGetResponseExport: TADOStoredProc
     Connection = DB
@@ -854,13 +854,13 @@ object DM: TDM
         Precision = 10
         Value = 11
       end>
-    Left = 400
-    Top = 456
+    Left = 56
+    Top = 504
   end
   object DataSource1: TDataSource
     DataSet = spGetResponseExport
-    Left = 528
-    Top = 456
+    Left = 168
+    Top = 504
   end
   object cmdDeleteResponse: TADOCommand
     CommandText = 'deleteResponse;1'
@@ -881,7 +881,60 @@ object DM: TDM
         Precision = 10
         Value = Null
       end>
-    Left = 400
-    Top = 520
+    Left = 336
+    Top = 504
+  end
+  object dsspGetSKUStock: TDataSource
+    DataSet = spGetSKUStock
+    Left = 168
+    Top = 312
+  end
+  object spGetSKUStock: TADODataSet
+    Connection = DB
+    CursorType = ctStatic
+    CommandText = 'getSKUStock2;1'
+    CommandType = cmdStoredProc
+    Parameters = <>
+    Left = 56
+    Top = 312
+    object spGetSKUStockItemNo: TStringField
+      FieldName = 'ItemNo'
+      ReadOnly = True
+      Size = 6
+    end
+    object spGetSKUStockSizeCode: TStringField
+      FieldName = 'SizeCode'
+      ReadOnly = True
+      Size = 6
+    end
+    object spGetSKUStockUKSize: TStringField
+      FieldName = 'UKSize'
+      ReadOnly = True
+    end
+    object spGetSKUStockColour: TStringField
+      FieldName = 'Colour'
+      ReadOnly = True
+      Size = 9
+    end
+    object spGetSKUStockColourName: TStringField
+      FieldName = 'ColourName'
+      ReadOnly = True
+      Size = 80
+    end
+    object spGetSKUStockAvailabilitySKU: TIntegerField
+      FieldName = 'AvailabilitySKU'
+    end
+    object spGetSKUStockInventQtyAvailPhysical: TIntegerField
+      FieldName = 'InventQtyAvailPhysical'
+    end
+    object spGetSKUStockSKUId: TStringField
+      FieldName = 'SKUId'
+      Size = 50
+    end
+    object spGetSKUStockUKItem: TStringField
+      FieldName = 'UKItem'
+      ReadOnly = True
+      Size = 10
+    end
   end
 end

@@ -1,7 +1,7 @@
 object fmSheego: TfmSheego
   Left = 0
   Top = 0
-  Caption = 'Sheego CSV Creator Version : 1 .0'
+  Caption = 'Sheego CSV Creator Version : 3 .0'
   ClientHeight = 620
   ClientWidth = 721
   Color = clBtnFace
@@ -28,7 +28,7 @@ object fmSheego: TfmSheego
     Top = 0
     Width = 721
     Height = 601
-    ActivePage = tabOrders
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 0
     object tabImport: TTabSheet
@@ -1175,6 +1175,136 @@ object fmSheego: TfmSheego
         end
       end
     end
+    object TabSheet2: TTabSheet
+      Caption = 'Stock'
+      ImageIndex = 7
+      OnShow = TabSheet2Show
+      object Panel15: TPanel
+        Left = 0
+        Top = 0
+        Width = 713
+        Height = 41
+        Align = alTop
+        Caption = 'SKU Stock '
+        TabOrder = 0
+      end
+      object Panel16: TPanel
+        Left = 0
+        Top = 496
+        Width = 713
+        Height = 76
+        Align = alBottom
+        TabOrder = 1
+        object txtFindSKU: TLabeledEdit
+          Left = 16
+          Top = 24
+          Width = 121
+          Height = 22
+          EditLabel.Width = 52
+          EditLabel.Height = 14
+          EditLabel.Caption = 'Find Item'
+          TabOrder = 0
+          OnKeyDown = txtFindSKUKeyDown
+        end
+        object Button6: TButton
+          Left = 143
+          Top = 24
+          Width = 75
+          Height = 23
+          Caption = 'Find'
+          TabOrder = 1
+          OnClick = Button6Click
+        end
+        object Button8: TButton
+          Left = 552
+          Top = 24
+          Width = 139
+          Height = 25
+          Caption = 'Export Stock -> CSV'
+          TabOrder = 2
+          OnClick = Button8Click
+        end
+      end
+      object Panel17: TPanel
+        Left = 0
+        Top = 41
+        Width = 713
+        Height = 455
+        Align = alClient
+        Caption = 'Panel17'
+        TabOrder = 2
+        object DBGrid7: TDBGrid
+          Left = 1
+          Top = 1
+          Width = 711
+          Height = 453
+          Align = alClient
+          DataSource = DM.dsspGetSKUStock
+          Options = [dgTitles, dgColumnResize, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          ReadOnly = True
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -12
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'SKUId'
+              Width = 200
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ItemNo'
+              Width = 70
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'UKItem'
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'SizeCode'
+              Width = 70
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'UKSize'
+              Width = 64
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'Colour'
+              Width = 70
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'ColourName'
+              Width = 200
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'AvailabilitySKU'
+              Width = 64
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'InventQtyAvailPhysical'
+              Width = 80
+              Visible = True
+            end>
+        end
+      end
+    end
   end
   object StatusBar1: TStatusBar
     Left = 0
@@ -1268,7 +1398,7 @@ object fmSheego: TfmSheego
     Left = 360
     Top = 88
     Bitmap = {
-      494C01010C0018005C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C0018006C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1844,5 +1974,12 @@ object fmSheego: TfmSheego
         Action = actGetPwd
       end
     end
+  end
+  object SaveDialog2: TSaveDialog
+    DefaultExt = 'csv'
+    Filter = 'CSV|*.csv'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
+    Left = 448
+    Top = 504
   end
 end

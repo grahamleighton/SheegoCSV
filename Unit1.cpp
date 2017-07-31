@@ -1059,3 +1059,149 @@ void __fastcall TfmSheego::actResponseRefreshExecute(TObject *Sender)
 
 
 
+void __fastcall TfmSheego::Button6Click(TObject *Sender)
+{
+	if (! txtFindSKU->Text.IsEmpty()) {
+
+		DM->spGetSKUStock->Filter = "[UKItem] like '" + txtFindSKU->Text + "%'";
+		DM->spGetSKUStock->Filtered = true;
+
+	}
+	else
+	{
+		DM->spGetSKUStock->Filtered = false;
+		DM->spGetSKUStock->Filter = "";
+
+    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::TabSheet2Show(TObject *Sender)
+{
+	DM->spGetSKUStock->Open();
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfmSheego::txtFindSKUKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+
+{
+	if ( Key ==  13) {
+        Button6->Click();
+	}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfmSheego::Button8Click(TObject *Sender)
+{
+	if ( SaveDialog1->Execute()) {
+		TStringList *csv = new TStringList();
+		TStringList *rec = new TStringList();
+		TStringList *col = new TStringList();
+
+		csv->Clear();
+		rec->Clear();
+		col->Clear();
+
+
+		int c = 0;
+
+		while ( c < DBGrid7->Columns->Count  )
+		{
+			rec->Add(DBGrid7->Columns->Items[c]->FieldName  );
+			c++;
+		}
+		col->Text = rec->Text;
+		csv->Add(rec->CommaText);
+
+		rec->Clear();
+
+		try
+		{
+			TDataSet *D = DBGrid7->DataSource->DataSet;
+			TBookmark bmk = D->GetBookmark();
+
+			D->DisableControls();
+
+			try
+			{
+				// create the CSV from the data
+
+				D->First() ;
+				while( ! D->Eof )
+				{
+					int cl = 0;
+					rec->Clear();
+
+					AnsiString ct = "";
+					while ( cl < col->Count )
+					{
+						if ( cl == 2 || cl == 0  )
+							rec->Add ( " " + D->FieldByName(col->Strings[cl])->Value + " " ) ;
+						else
+							rec->Add ( D->FieldByName(col->Strings[cl])->Value ) ;
+
+						if ( cl < 7 )
+						{
+						if ( ct.IsEmpty() )
+							ct = "=\"" + D->FieldByName(col->Strings[cl])->Value + "\"";
+						else
+							ct += ",=\"" + D->FieldByName(col->Strings[cl])->Value + "\"";
+
+						}
+						else
+						{
+							ct +=  "," + D->FieldByName(col->Strings[cl])->Value;
+						}
+						cl++;
+					}
+
+
+
+
+//					csv->Add ( rec->CommaText );
+					csv->Add ( ct  );
+					D->Next();
+				}
+
+			}
+			catch(Exception &E)
+			{
+			}
+
+			D->GotoBookmark(bmk);
+
+			D->EnableControls();
+		}
+		catch(...)
+		{
+		}
+		bool retry = true;
+		bool saved = false;
+		while ( retry )
+		{
+			try
+			{
+				csv->SaveToFile ( SaveDialog1->FileName );
+				saved = true;
+				retry = false;
+			}
+			catch(Exception &E)
+			{
+				if ( MessageDlg ( "Error while trying to save to " + SaveDialog1->FileName + "\n\nError : " + E.Message + "\n\nRetry ?",
+					mtWarning,
+					TMsgDlgButtons() << mbYes << mbNo , 0 ) == mrNo )
+				{
+					retry = false;
+				}
+			}
+		}
+		if ( saved)
+		{
+			MessageDlg ( "SKU Stock Saved to " + SaveDialog1->FileName ,
+				mtInformation , TMsgDlgButtons() << mbOK , 0 );
+		}
+	}
+}
+//---------------------------------------------------------------------------
+
